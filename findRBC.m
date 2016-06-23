@@ -21,7 +21,8 @@ function listROI = findRBC (frame, area, id)
     indices = find(area == id);
     
     % Crop the FOV to just have the relevant pixels
-    rect = imcrop(frame, autoGetRect(size(frame), indices, 0));
+    rectCoords = autoGetRect(size(frame), indices, 0);
+    rect = imcrop(frame, rectCoords);
     originalRect = imcrop(originalFrame, autoGetRect(size(frame), indices, 0));
     
     % Label all continuous regions
@@ -60,6 +61,9 @@ function listROI = findRBC (frame, area, id)
 %         figure;
 %         imshow(newRect, []);
     end
+    
+    % Fix coordinates to be relative to entire FOV
+    listROI = listROI + repmat ([rectCoords(1, 1:2) 0 0], size(listROI, 1), 1);
     
     % Testing purposes, show the labelled RBC edges
     newjet = jet;

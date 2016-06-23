@@ -66,11 +66,11 @@ function listROI = findRBC (frame, area, id)
     listROI = listROI + repmat ([rectCoords(1, 1:2) 0 0], size(listROI, 1), 1);
     
     % Testing purposes, show the labelled RBC edges
-    newjet = jet;
-    newjet(1, :) = 0;
-    
-    imshow(rect, []);
-    colormap(newjet);
+%     newjet = jet;
+%     newjet(1, :) = 0;
+%     
+%     imshow(rect, []);
+%     colormap(newjet);
 
 
 end

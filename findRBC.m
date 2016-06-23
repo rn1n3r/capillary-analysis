@@ -56,9 +56,9 @@ function listROI = findRBC (frame, area, id)
     for i = 1:max(rect(:))
         indices = find(rect == i);
         listROI(i, :) = autoGetRect(size(rect), indices, 4);
-        newRect = imcrop(originalRect, listROI(i, :));
-        figure;
-        imshow(newRect, []);
+%         newRect = imcrop(originalRect, listROI(i, :));
+%         figure;
+%         imshow(newRect, []);
     end
     
     % Testing purposes, show the labelled RBC edges

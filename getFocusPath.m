@@ -6,6 +6,7 @@ function listOfMaxFM = getFocusPath (fname, var, id)
     % Store min_y, max_y, fm
     listOfMaxFM = zeros(100, 3);
     count = 1;
+    h = waitbar(0, 'Processing, please wait');
     for i = 1:numel(fname)
         frame = imread(fname{i});
         listROI = findRBC(frame, area, id);
@@ -19,8 +20,10 @@ function listOfMaxFM = getFocusPath (fname, var, id)
 
             count = count + 1;
         end
-       
+        if ~mod(i - 1, 200)
+            waitbar(i/numel(fname));
+        end
     end
-
+    close(h);
 
 end

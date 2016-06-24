@@ -1,42 +1,49 @@
 % Try and find the subregion in a capillary path that is in-focus
-function listOfMaxFM = getFocusPath (fname, var, id)
+function listFM = getFocusPath (fname, var, id)
     tic
     area = getCapillaries(var);
     
     % Store min_y, max_y, fm
     % listOfMaxFM = zeros(100, 3);
     
-    % Store the focus measure and the length of the box at each
+    % Store the max/min/avg fm, last column used to store number of RBCs
+    % with that y-coordinate
     % y-coordinate
     
-    listOfMaxFM = zeros(520, 2);
+    listFM = zeros(520, 4);
+    listFM(:, 2) = 1e5;
     
-    count = 1;
     h = waitbar(0, 'Processing, please wait');
     for i = 1:numel(fname)
         frame = imread(fname{i});
         listROI = findRBC(frame, area, id);
         fm = analyseRBCFocus(listROI, frame);
-        
+   
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)
 %             [listOfMaxFM(count, 3), ind] = max(fm);
 % 
 %             listOfMaxFM(count, 1:2) = [listROI(ind, 2) (listROI(ind, 2) + listROI(ind, 4))];
             for j = 1:numel(fm)
-                if listOfMaxFM(listROI(j, 2), 1) < fm(j)
-                    listOfMaxFM(listROI(j, 2), 1) = fm(j);
-                    listOfMaxFM(listROI(j, 2), 2) = listROI(j, 4);
+                if listFM(listROI(j, 2), 1) < fm(j)
+                    listFM(listROI(j, 2), 1) = fm(j);
                 end
+                if listFM(listROI(j, 2), 2) > fm(j)
+                    listFM(listROI(j, 2), 2) = fm(j);
+                end
+                listFM(listROI(j, 2), 3) = listFM(listROI(j, 2), 3) + fm(j);
+                listFM(listROI(j, 2), 4) = listFM(listROI(j, 2), 4) + 1;
+               
             end
-
-            count = count + 1;
+            
         end
         if ~mod(i - 1, 200)
             waitbar(i/numel(fname));
         end
     end
-    listOfMaxFM(listOfMaxFM == 0) = NaN;
+    listFM(listFM == 0) = NaN;
+    listFM(listFM == 1e5) = NaN;
+    listFM(:, 3) = listFM(:, 3) ./ listFM(:,4);
     toc
     close(h)
 end

@@ -1,6 +1,6 @@
 % Try and find the subregion in a capillary path that is in-focus
 function listOfMaxFM = getFocusPath (fname, var, id)
-    
+    tic
     area = getCapillaries(var);
     
     % Store min_y, max_y, fm
@@ -25,5 +25,5 @@ function listOfMaxFM = getFocusPath (fname, var, id)
         end
     end
     close(h);
-
+    toc
 end

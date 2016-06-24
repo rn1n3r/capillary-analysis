@@ -10,7 +10,7 @@ function listROI = findRBC (frame, area, id)
     
     
     frame = double(frame) ./ 2^16; % Convert to double (for NaNs)
-    originalFrame = frame; % Store the original image for testing
+    %originalFrame = frame; % Store the original image for testing
     
     % Apply edge detection and set all pixels that are not in the capillary
     % of interest to zero
@@ -21,9 +21,9 @@ function listROI = findRBC (frame, area, id)
     indices = find(area == id);
     
     % Crop the FOV to just have the relevant pixels
-    rectCoords = autoGetRect(size(frame), indices, 0);
+    rectCoords = autoGetRect(size(frame), [], [], indices, 0);
     rect = imcrop(frame, rectCoords);
-    originalRect = imcrop(originalFrame, autoGetRect(size(frame), indices, 0));
+    %originalRect = imcrop(originalFrame, rectCoords);
     
     % Label all continuous regions
     rect = bwlabel(rect);
@@ -56,14 +56,14 @@ function listROI = findRBC (frame, area, id)
     % For each region, call autoGetRect and store the info
     for i = 1:max(rect(:))
         indices = find(rect == i);
-        listROI(i, :) = autoGetRect(size(rect), indices, 4);
+        listROI(i, :) = autoGetRect(size(rect), size(frame), rectCoords, indices, 4);
 %         newRect = imcrop(originalRect, listROI(i, :));
 %         figure;
 %         imshow(newRect, []);
     end
     
     % Fix coordinates to be relative to entire FOV
-    listROI = listROI + repmat ([rectCoords(1, 1:2) 0 0], size(listROI, 1), 1);
+    listROI = listROI + repmat ([rectCoords(1, 1:2) 0 0] - [1 1 0 0], size(listROI, 1), 1);
     
     % Testing purposes, show the labelled RBC edges
 %     newjet = jet;
@@ -78,8 +78,20 @@ end
 % This function takes an image and a list of points (indices)
 % This function returns a rectangle encapsulating these points
 % [xo yo width height]
-function rect = autoGetRect (size, indices, p)
+% sizeLimit is a [y x] limit (for if the rectangle is within a larger frame
+% that you don't want to exceed
+% rect is [x y] (could be from autoGetRect before) that tells you where the
+% current rectangle is within the large frame in sizelimit
+function rect = autoGetRect (size, sizeLimit, rect, indices, p)
     
+    if isempty(sizeLimit)
+        sizeLimit = size;
+    end
+    if isempty(rect)
+        rect = [0 0];
+    else
+        rect = rect(:, 1:2);
+    end
     [subs(:, 1), subs(:, 2)] = ind2sub(size, indices);
     xo = min(subs(:, 2)) - p;
     yo = min(subs(:, 1)) - p;
@@ -87,16 +99,16 @@ function rect = autoGetRect (size, indices, p)
     yf = max(subs(:, 1)) + p;
     
     % In case padding takes it out of the image
-    if xo < 0
+    if xo + rect(1) < 0
         xo = 0;
     end
-    if yo < 0
+    if yo + rect(2) < 0
         yo = 0;
     end
-    if xf > size(2)
+    if xf + rect(1) - 1 > sizeLimit(2)
         xf = size(2);
     end
-    if yf > size(1)
+    if yf + rect(2) - 1 > sizeLimit(1)
         yf = size(1);
     end
         

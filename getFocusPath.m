@@ -24,6 +24,7 @@ function listOfMaxFM = getFocusPath (fname, var, id)
             waitbar(i/numel(fname));
         end
     end
-    close(h);
+    
     toc
+    close(h)
 end

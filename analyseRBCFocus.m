@@ -11,7 +11,8 @@ function fm = analyseRBCFocus (listROI, I)
 %         gprops = graycoprops(glcm);
 %         fm(i) = gprops.Correlation;
 
-        fm(i) = fmeasure(I, 'BREN', listROI(i, :));
+%         fm(i) = fmeasure(I, 'BREN', listROI(i, :));
+          fm(i) = fmeasure(I, 'LAPV', listROI(i, :));
     end
 
 end

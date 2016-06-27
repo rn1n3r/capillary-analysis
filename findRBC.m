@@ -9,14 +9,9 @@
 function listROI = findRBC (frame, area, id)
     
     
-    frame = double(frame) ./ 2^16; % Convert to double (for NaNs)
-    %originalFrame = frame; % Store the original image for testing
     
     % Apply edge detection and set all pixels that are not in the capillary
     % of interest to zero
-    
-    %frame = edge(frame, 'canny', 0.26);
-    % frame (area ~= id) = 0; 
     
     % Find the indices of the edges in the path
     indices = find(area == id);
@@ -26,10 +21,8 @@ function listROI = findRBC (frame, area, id)
     rect = imcrop(frame, rectCoords);
     area = imcrop(area, rectCoords);
     
-    
     rect = edge(rect, 'canny', 0.26);
     rect(area ~= id) = 0;
-    %originalRect = imcrop(originalFrame, rectCoords);
     
     % Label all continuous regions
     rect = bwlabel(rect);

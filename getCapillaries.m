@@ -65,8 +65,8 @@ sizeOfEdges = sizeOfEdges(any(sizeOfEdges,2),:);
 % 
 % % figure;
 %firstFrame = squeeze(frames(1,:,:));
-figure;
-imshow(capillaries, []);
+% figure;
+% imshow(capillaries, []);
 areas = imdilate(capillaries,strel('disk',6));
 areas = imdilate(areas, strel('disk', 3));
 %

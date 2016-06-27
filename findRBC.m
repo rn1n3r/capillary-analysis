@@ -14,8 +14,9 @@ function listROI = findRBC (frame, area, id)
     
     % Apply edge detection and set all pixels that are not in the capillary
     % of interest to zero
-    frame = edge(frame, 'canny', 0.26);
-    frame (area ~= id) = 0; 
+    
+    %frame = edge(frame, 'canny', 0.26);
+    % frame (area ~= id) = 0; 
     
     % Find the indices of the edges in the path
     indices = find(area == id);
@@ -23,6 +24,11 @@ function listROI = findRBC (frame, area, id)
     % Crop the FOV to just have the relevant pixels
     rectCoords = autoGetRect(size(frame), [], [], indices, 0);
     rect = imcrop(frame, rectCoords);
+    area = imcrop(area, rectCoords);
+    
+    
+    rect = edge(rect, 'canny', 0.26);
+    rect(area ~= id) = 0;
     %originalRect = imcrop(originalFrame, rectCoords);
     
     % Label all continuous regions

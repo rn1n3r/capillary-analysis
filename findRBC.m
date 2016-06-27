@@ -62,7 +62,7 @@ function listROI = findRBC (frame, area, id)
     end
     
     % Fix coordinates to be relative to entire FOV
-    listROI = listROI + repmat ([rectCoords(1, 1:2) 0 0] - [1 1 0 0], size(listROI, 1), 1);
+    listROI = listROI + repmat ([rectCoords(1, 1:2) 0 0], size(listROI, 1), 1);
     
     % Testing purposes, show the labelled RBC edges
 %     newjet = jet;
@@ -98,16 +98,16 @@ function rect = autoGetRect (size, sizeLimit, rect, indices, p)
     yf = max(subs(:, 1)) + p;
     
     % In case padding takes it out of the image
-    if xo + rect(1) < 0
-        xo = 0;
+    if xo + rect(1) < 1
+        xo = 1;
     end
-    if yo + rect(2) < 0
-        yo = 0;
+    if yo + rect(2) < 1
+        yo = 1;
     end
-    if xf + rect(1) - 1 > sizeLimit(2)
+    if xf + rect(1) > sizeLimit(2)
         xf = size(2);
     end
-    if yf + rect(2) - 1 > sizeLimit(1)
+    if yf + rect(2) > sizeLimit(1)
         yf = size(1);
     end
         

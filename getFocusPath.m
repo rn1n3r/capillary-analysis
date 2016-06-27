@@ -21,9 +21,6 @@ function listFM = getFocusPath (fname, var, id)
    
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)
-%             [listOfMaxFM(count, 3), ind] = max(fm);
-% 
-%             listOfMaxFM(count, 1:2) = [listROI(ind, 2) (listROI(ind, 2) + listROI(ind, 4))];
             for j = 1:numel(fm)
                 if listFM(listROI(j, 2), 1) < fm(j)
                     listFM(listROI(j, 2), 1) = fm(j);

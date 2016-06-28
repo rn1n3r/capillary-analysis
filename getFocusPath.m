@@ -13,7 +13,7 @@ function listFM = getFocusPath (fname, var, id)
     listFM = zeros(520, 4);
     listFM(:, 2) = 1e5;
     
-    h = waitbar(0, 'Processing, please wait');
+    %h = waitbar(0, 'Processing, please wait');
     for i = 1:numel(fname)
         frame = imread(fname{i});
         listROI = findRBC(frame, area, id);
@@ -35,12 +35,12 @@ function listFM = getFocusPath (fname, var, id)
             
         end
         if ~mod(i - 1, 200)
-            waitbar(i/numel(fname));
+            %waitbar(i/numel(fname));
         end
     end
     listFM(listFM == 0) = NaN;
     listFM(listFM == 1e5) = NaN;
     listFM(:, 3) = listFM(:, 3) ./ listFM(:,4);
     toc
-    close(h)
+    %close(h)
 end

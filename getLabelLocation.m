@@ -1,3 +1,5 @@
+% Used in frame_gui to find a location to place the ID label of a capillary
+% Puts it at the highest y-coordinate
 
 function coords = getLabelLocation(area, idList)
 

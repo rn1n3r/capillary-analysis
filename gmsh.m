@@ -20,15 +20,17 @@ function gmsh (I)
     end
     
     % Attempt to get lines
-    diffImg = imfilter(gray, fspecial('gaussian')) - gray;
-    lines = edge(diffImg, 'canny', [0.2 0.3]);
-    lines(~binaryImage) = 0;
     
+    complement = imcomplement(gray);
+    %complement = imfilter(complement, fspecial('gaussian'));
+    boundaries = watershed(imhmin(complement, 20));
     
+    imshow(I);
+    figure;
     imshow(finalImage);
     figure;
-    imshow(lines)
-    
+    imshow(boundaries)
+  
 
 
 end

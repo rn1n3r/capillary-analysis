@@ -13,7 +13,6 @@ fov3(:, 1) = {idList3(:, 1)};
 parfor i = 1:size(idList3, 1)
     temp = getFocusPath(fname, var3, idList3(i));
     fov3{i, 2} = {temp};
-    
 end
 
 clear fnames;

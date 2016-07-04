@@ -11,35 +11,33 @@ function listFM = getFocusPath (fname, var, id)
     % y-coordinate
     
     listFM = zeros(520, 4);
-    listFM(:, 2) = 1e5;
+    listFM(:, 2) = 1e7;
     
     %h = waitbar(0, 'Processing, please wait');
     for i = 1:numel(fname)
         frame = imread(fname{i});
         listROI = findRBC(frame, area, id);
         fm = analyseRBCFocus(listROI, frame);
-   
+        
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)
             for j = 1:numel(fm)
                 if listFM(listROI(j, 2), 1) < fm(j)
                     listFM(listROI(j, 2), 1) = fm(j);
                 end
-                if listFM(listROI(j, 2), 2) > fm(j)
+                if listFM(listROI(j, 2), 2) > fm(j) && ~isnan(fm(j))
                     listFM(listROI(j, 2), 2) = fm(j);
                 end
                 listFM(listROI(j, 2), 3) = listFM(listROI(j, 2), 3) + fm(j);
                 listFM(listROI(j, 2), 4) = listFM(listROI(j, 2), 4) + 1;
-               
             end
-            
         end
         if ~mod(i - 1, 200)
             %waitbar(i/numel(fname));
         end
     end
     listFM(listFM == 0) = NaN;
-    listFM(listFM == 1e5) = NaN;
+    listFM(listFM == 1e7) = NaN;
     listFM(:, 3) = listFM(:, 3) ./ listFM(:,4);
     toc
     %close(h)

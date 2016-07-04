@@ -1,4 +1,4 @@
-function fm = analyseRBCFocus (listROI, I)
+ function fm = analyseRBCFocus (listROI, I)
 
     fm = zeros(size(listROI, 1), 1);
     

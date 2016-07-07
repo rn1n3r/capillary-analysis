@@ -1,4 +1,4 @@
- function fm = analyseRBCFocus (listROI, I)
+ function fm = analyseRBCFocus (listROI, I, fmStr)
 
     fm = zeros(size(listROI, 1), 1);
     
@@ -12,7 +12,7 @@
 %         fm(i) = gprops.Correlation;
 
 %         fm(i) = fmeasure(I, 'BREN', listROI(i, :));
-          fm(i) = fmeasure(I, 'LAPV', listROI(i, :));
+          fm(i) = fmeasure(I, fmStr, listROI(i, :));
     end
 
 end

@@ -1,5 +1,5 @@
 % Try and find the subregion in a capillary path that is in-focus
-function listFM = getFocusPath (fname, var, id)
+function listFM = getFocusPath (fname, var, id, measureStr)
     tic
     area = getCapillaries(var);
     
@@ -17,7 +17,7 @@ function listFM = getFocusPath (fname, var, id)
     for i = 1:numel(fname)
         frame = imread(fname{i});
         listROI = findRBC(frame, area, id);
-        fm = analyseRBCFocus(listROI, frame);
+        fm = analyseRBCFocus(listROI, frame, measureStr);
         
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)

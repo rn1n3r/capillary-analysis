@@ -15,7 +15,7 @@ fov3(:, 1) = num2cell(idList3(:, 1));
     
 parfor i = 1:size(idList3, 1)
     temp = getFocusPath(fname, var3, idList3(i));
-    fov3{i, 2} = {temp};
+    fov3{i, 2} = temp;
 end
 
 clear fnames;
@@ -27,7 +27,7 @@ fov5(:, 1) = num2cell(idList5(:, 1));
 
 parfor i = 1:size(idList5, 1)
     temp = getFocusPath(fname, var5, idList5(i));
-    fov5{i, 2} = {temp};
+    fov5{i, 2} = temp;
 end
 
 clear fnames;

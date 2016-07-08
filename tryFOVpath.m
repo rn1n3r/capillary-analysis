@@ -14,7 +14,7 @@ fov3 = cell(size(idList3, 1), 2);
 fov3(:, 1) = num2cell(idList3(:, 1));
     
 parfor i = 1:size(idList3, 1)
-    temp = getFocusPath(fname, var3, idList3(i));
+    temp = getFocusPath(fname, var3, idList3(i), 'CURV');
     fov3{i, 2} = temp;
 end
 
@@ -26,7 +26,7 @@ fov5 = cell(size(idList5, 1), 2);
 fov5(:, 1) = num2cell(idList5(:, 1));
 
 parfor i = 1:size(idList5, 1)
-    temp = getFocusPath(fname, var5, idList5(i));
+    temp = getFocusPath(fname, var5, idList5(i), 'CURV');
     fov5{i, 2} = temp;
 end
 
@@ -38,7 +38,7 @@ fov7 = cell(size(idList7, 1), 2);
 fov7(:, 1) = num2cell(idList7(:, 1));
 
 parfor i = 1:size(idList7, 1)
-    temp = getFocusPath(fname, var7, idList7(i));
+    temp = getFocusPath(fname, var7, idList7(i), 'CURV');
     fov7{i, 2} = temp;
 end
 
@@ -50,7 +50,7 @@ fov8 = cell(size(idList8, 1), 2);
 fov8(:, 1) = num2cell(idList8(:, 1));
 
 parfor i = 1:size(idList8, 1)
-    temp = getFocusPath(fname, var8, idList8(i));
+    temp = getFocusPath(fname, var8, idList8(i), 'CURV');
     fov8{i, 2} = temp;
 end
 
@@ -62,7 +62,7 @@ fovp22 = cell(size(idListp22, 1), 2);
 fovp22(:, 1) = num2cell(idListp22(:, 1));
 
 parfor i = 1:size(idListp22, 1)
-    temp = getFocusPath(fname, varp22, idListp22(i));
+    temp = getFocusPath(fname, varp22, idListp22(i), 'CURV');
     fovp22{i, 2} = temp;
 end
 
@@ -74,7 +74,7 @@ fovp24 = cell(size(idListp24, 1), 2);
 fovp24(:, 1) = num2cell(idListp24(:, 1));
 
 parfor i = 1:size(idListp24, 1)
-    temp = getFocusPath(fname, varp24, idListp24(i));
+    temp = getFocusPath(fname, varp24, idListp24(i), 'CURV');
     fovp24{i, 2} = temp;
 end
 

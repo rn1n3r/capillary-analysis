@@ -13,6 +13,7 @@
 
 %         fm(i) = fmeasure(I, 'BREN', listROI(i, :));
           fm(i) = fmeasure(I, fmStr, listROI(i, :));
+          fm = fm ./ mean(I(:));
     end
 
 end

@@ -11,25 +11,25 @@ function gmsh (I)
     
     for i = 1:numel(s)
         if s(i).Area > 20
-            x = uint8(s(i).Centroid(2));
-            y = uint8(s(i).Centroid(1));
+            x = uint16(s(i).Centroid(2));
+            y = uint16(s(i).Centroid(1));
             finalImage(x-1:x+1, y-1:y+1) = 1;
         end
             
             
     end
     
-    % Attempt to get lines
-    
-    complement = imcomplement(gray);
-    %complement = imfilter(complement, fspecial('gaussian'));
-    boundaries = watershed(imhmin(complement, 20));
-    
+%     % Attempt to get lines
+%     
+%     complement = imcomplement(gray);
+%     %complement = imfilter(complement, fspecial('gaussian'));
+%     boundaries = watershed(imhmin(complement, 20));
+%     
     imshow(I);
     figure;
     imshow(finalImage);
     figure;
-    imshow(boundaries)
+%     imshow(boundaries)
   
 
 

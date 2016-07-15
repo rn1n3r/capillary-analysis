@@ -21,6 +21,7 @@ function listROI = findRBC (frame, area, id)
     rect = imcrop(frame, rectCoords);
     area = imcrop(area, rectCoords);
     
+    % Canny edge detection to find the borders of the  RBCs
     rect = edge(rect, 'canny', 0.26);
     rect(area ~= id) = 0;
     

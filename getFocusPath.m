@@ -38,7 +38,7 @@ function listFM = getFocusPath (fname, var, id, measureStr)
     end
     listFM(listFM == 0) = NaN;
     listFM(listFM == 1e7) = NaN;
-    listFM(:, 3) = listFM(:, 3) ; % ./ listFM(:,4);
+    
     toc
     %close(h)
 end

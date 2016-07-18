@@ -1,6 +1,6 @@
 % Returns the variance image of all the images given in fnames
 
-function var_img = getVarianceImage (fnames)
+function [var_img, mean_img] = getVarianceImage (fnames)
 
 tic
 % Get the mean of each pixel

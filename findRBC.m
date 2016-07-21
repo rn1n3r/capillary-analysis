@@ -9,7 +9,6 @@
 function listROI = findRBC (frame, area, id)
     
     
-    
     % Apply edge detection and set all pixels that are not in the capillary
     % of interest to zero
     
@@ -111,7 +110,7 @@ function rect = autoGetRect (size, sizeLimit, rect, indices, p)
     if yf + rect(2) > sizeLimit(1)
         yf = size(1);
     end
-        
+            
     
     rect = [xo yo (xf - xo) (yf - yo)];
     

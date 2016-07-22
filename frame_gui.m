@@ -92,7 +92,7 @@ function load_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Load the frames specified by the user inputted path
-[fnames, path] = get_fnames;
+[fnames, path] = getFnames;
 handles.fnames = fnames;
 
 % Get the path string and use it to find the labelled image
@@ -386,3 +386,21 @@ function edit1_KeyPressFcn(hObject, eventdata, handles)
 %	Character: character interpretation of the key(s) that was pressed
 %	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
 % handles    structure with handles and user data (see GUIDATA)
+
+% Used in frame_gui to find a location to place the ID label of a capillary
+% Puts it at the highest y-coordinate
+
+function coords = getLabelLocation(area, idList)
+
+coords = zeros(size(idList));
+
+for i = 1:size(idList, 1)
+% Get smallest Y-value
+indices = find(area == idList(i, 1));
+
+subs = zeros(numel(indices), 2);
+[subs(:, 1), subs(:, 2)] = ind2sub(size(area), indices);
+subs = sortrows(subs, 1);
+coords(i, :) = subs(1, :);
+end
+

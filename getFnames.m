@@ -1,9 +1,9 @@
 % Function to get path containing frames in FOV
-% fname = get_fnames()
-% fname = get_fnames(path)
-% fname = get_fnames(path, ext)
+% fname = getFnames()
+% fname = getFnames(path)
+% fname = getFnames(path, ext)
 
-function [fnames, path] = get_fnames (varargin)
+function [fnames, path] = getFnames (varargin)
 
     % Default path (works on work computer, change depending on your
     % environment)

@@ -1,27 +1,16 @@
-% Find the capillaries in the FOV
-% Currently uses the variance functional image for edge detection
+% Find the capillaries in the FOV, using edges of the variance image
+% areaMask = bwlabelled mask showing where each capillary is
+% sizeOfEdges = matrix with the areas of each capillaries
+% id in column 1, pixels in column 2
 % Currently using canny, at 0.2 threshold (how do I justify this?)
 
-function [areas sizeOfEdges] = getCapillaries (variance)
-%I = variance functional image
-%I = getVarianceImage(frames);
-
-%close all;
-tic;
+function [areaMask, sizeOfEdges] = getCapillaries (variance)
 
 % Generate edge map
 edges = edge(variance, 'canny', 0.2);
 
 % Label each detected edge and store in "capillaries"
 capillaries = bwlabel(edges);
-
-%Show the edge map
-% figure;
-% imshow(edges, []);
-
-% Color map for showing the different capillaries
-new_jet = jet;
-new_jet(1,:) = 0;
 
 % Count the size of each edge
 % One row for the ID and one for the actual size
@@ -32,13 +21,9 @@ for i = 1:max(capillaries(:))
    sizeOfEdges(i, 1) = i;
 end
 
-
-
 % Run markCapillaries, which uses findCapillaries to label all the
 % capillaries
 [capillaries sizeOfEdges] = markCapillaries(capillaries, sizeOfEdges, size(sizeOfEdges, 1));
-
-
 
 % This loop removes edges that are very small ... from Asher, the minimum
 % length that can be resolved is around 25 microns, and at 0.6 microns /
@@ -57,24 +42,9 @@ end
 % Remove edges with 0 length (marked in previous for loop)
 sizeOfEdges = sizeOfEdges(any(sizeOfEdges,2),:);
 
+areaMask = imdilate(capillaries,strel('disk',6));
+areaMask = imdilate(areaMask, strel('disk', 3));
 
-%Show the capillaries with marked colours
-% figure;
-% imshow(capillaries, []);
-% colormap(new_jet);
-% 
-% % figure;
-%firstFrame = squeeze(frames(1,:,:));
-% figure;
-% imshow(capillaries, []);
-areas = imdilate(capillaries,strel('disk',6));
-areas = imdilate(areas, strel('disk', 3));
-%
-% 
-% imshow(firstFrame, []);
-
-
-toc;
 end
 
 function [capillaries, sizeOfEdges] = markCapillaries (capillaries, sizeOfEdges, numEdges)
@@ -85,9 +55,7 @@ function [capillaries, sizeOfEdges] = markCapillaries (capillaries, sizeOfEdges,
 % sizeOfEdge = matrix storing edge indices and length, will be used to
 % store capillary info
 % numCap = how many edges in the image
-%     figure;
-%     imshow(capillaries, []);
-    
+
     % Base ID, also used to check if a capillary has been marked yet
     baseID = 600;
     id = baseID;
@@ -116,14 +84,9 @@ function [capillaries, sizeOfEdges] = markCapillaries (capillaries, sizeOfEdges,
         % Mark current edge with the current working ID
         capillaries(capillaries == sizeOfEdges(capIndex,1)) = id;
         
-       
-        
         % Get the capillaries!
         % sameIdFound only looks at horizontal edges
-        [capillaries removedIds numAdded sameIdFound] = findCorrespondingEdge(capillaries, 20, id, baseID);
-        
-        
-        
+        [capillaries, removedIds, numAdded, sameIdFound] = findCorrespondingEdge(capillaries, 20, id, baseID);       
         
         % Get rid of edges in the following cases:
         % 1. Pixels found in search were less than half the length, and it
@@ -172,8 +135,6 @@ function [capillaries, sizeOfEdges] = markCapillaries (capillaries, sizeOfEdges,
             % Update sizeOfEdge
             sizeOfEdges(capIndex,1) = id;
             sizeOfEdges(capIndex,2) = sizeOfEdges(capIndex,2) + numAdded;
-            %sizeOfEdges(ismember(sizeOfEdges(:,1), removedIds), :) = 0;
-            
             
         end
         
@@ -200,8 +161,8 @@ function [capillaries, removedIds, numAdded, sameIdFound] = findCorrespondingEdg
 % Also returns a list of IDs that were replaced during the edge search
 
 % Get the path
-[I J] = ind2sub(size(capillaries), find(capillaries == ID));
-path = [I J];
+[I, J] = ind2sub(size(capillaries), find(capillaries == ID));
+path = [I, J];
 
 % Removed ID stored here
 removedIds = linspace(0,0,400);
@@ -285,7 +246,6 @@ end
 
 % Remove the zeros in the array
 removedIds = removedIds(removedIds~=0);
-
 
 
 end

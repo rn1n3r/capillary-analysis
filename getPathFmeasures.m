@@ -19,7 +19,7 @@ function listFM = getPathFmeasures (fname, var, id, measureStr, maxImg)
     
     for i = 1:numel(fname)
         frame = imread(fname{i});
-        frame = log10(double(maxImg)./double(frame));
+%         frame = log10(double(maxImg)./double(frame));
         listROI = findRBC(frame, area, id);
         fm = analyseRBCFocus(listROI, frame, measureStr);
         

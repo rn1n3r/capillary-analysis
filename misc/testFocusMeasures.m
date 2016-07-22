@@ -1,4 +1,4 @@
-close all;
+p close all;
 [fnames, path] = get_fnames(path);
 h = figure;
 frame = imread(fnames{80});

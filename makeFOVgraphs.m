@@ -19,7 +19,7 @@ for i = 1:size(fov, 1)
 end
 
 medianVal = mean([maxVal minVal]);
-
+fprintf('Mean is: %d\n', maxMean);
 for i = 1:size(fov, 1)
     values = fov{i,2}(:, 3);
     figure;

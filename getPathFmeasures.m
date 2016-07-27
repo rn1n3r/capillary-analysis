@@ -7,7 +7,7 @@
 % This function only does one capillary to make parallel processing easier
 % in getFOVfmeasures.m
 
-function listFM = getPathFmeasures (fname, var, id, measureStr, maxImg)
+function listFM = getPathFmeasures (fname, var, id, measureStr)
 
     area = getCapillaries(var);
     
@@ -20,16 +20,17 @@ function listFM = getPathFmeasures (fname, var, id, measureStr, maxImg)
     for i = 1:numel(fname)
         frame = imread(fname{i});
 %         frame = log10(double(maxImg)./double(frame));
-        listROI = findRBC(frame, area, id);
+        [listROI, circ] = findRBC(frame, area, id);
         fm = analyseRBCFocus(listROI, frame, measureStr);
         
-        boxAreas = zeros(size(listROI, 1), 1);
-        for j = 1:size(listROI, 1)
-            boxAreas(j) = listROI(j, 3) * listROI(j, 4);
-        end
+%         boxAreas = zeros(size(listROI, 1), 1);
+%         for j = 1:size(listROI, 1)
+%             boxAreas(j) = listROI(j, 3) * listROI(j, 4);
+%         end
+%         
+%         fm = fm./boxAreas;
         
-        fm = fm./boxAreas;
-        
+        fm = fm./circ;
         
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)

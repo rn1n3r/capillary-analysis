@@ -29,7 +29,7 @@ for i = 1:size(fov, 1)
     ylabel('Average focus level');
     axis([1 520 minVal maxVal])
     percentage = sum(values >= maxMean) / sum(~isnan(values));
-    fprintf('%d has %.3f of values equal to or above mean\n', fov{i, 1}, percentage)
+    fprintf('%d: %.3f >= mean, %d pts, std = %.3f\n', fov{i, 1}, percentage, sum(values >= maxMean), nanstd(values));
 end
 
 

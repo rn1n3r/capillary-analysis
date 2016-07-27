@@ -1,2 +1,0 @@
-HISR - I_max - I_min for an ROI
-- Hard to analyze due to outliers skewing the graphs, but most values seem to be relatively constant

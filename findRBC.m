@@ -6,7 +6,7 @@
 % area = capillary map from getCapillaries()
 % id = id of capillary of interest
 
-function listROI = findRBC (frame, area, id)
+function [listROI, circ] = findRBC (frame, area, id)
     
     
     % Apply edge detection and set all pixels that are not in the capillary
@@ -50,11 +50,16 @@ function listROI = findRBC (frame, area, id)
     rect = bwlabel(rect);
     
     % Initialize our data structure to store the rect info of each RBC
+    % Also store the circumference
     listROI = zeros(max(rect(:)), 4);
+    circ = zeros(max(rect(:)), 1);
     
     % For each region, call autoGetRect and store the info
     for i = 1:max(rect(:))
         indices = find(rect == i);
+        circ(i) = sum(sum(rect == i));
+        
+        % 4 pixel padding seems to work...
         listROI(i, :) = autoGetRect(size(rect), size(frame), rectCoords, indices, 4);
 %         newRect = imcrop(originalRect, listROI(i, :));
 %         figure;

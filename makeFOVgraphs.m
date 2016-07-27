@@ -1,4 +1,4 @@
-function makeFOVgraphs(fov)
+function makeFOVgraphs(fov, targetID)
 
 minVal = 0;
 maxVal = 0;
@@ -21,6 +21,7 @@ end
 medianVal = mean([maxVal minVal]);
 fprintf('Mean is: %d\n', maxMean);
 for i = 1:size(fov, 1)
+    if targetID == 0 || targetID == fov{i, 1}
     values = fov{i,2}(:, 3);
     figure;
     scatter(1:520, values);
@@ -29,7 +30,8 @@ for i = 1:size(fov, 1)
     ylabel('Average focus level');
     axis([1 520 minVal maxVal])
     percentage = sum(values >= maxMean) / sum(~isnan(values));
-    fprintf('%d: %.3f >= mean, %d pts, std = %.3f\n', fov{i, 1}, percentage, sum(values >= maxMean), nanstd(values));
+    fprintf('%d: %.3f >= mean, %d pts, std = %d\n', fov{i, 1}, percentage, sum(values >= maxMean), nanstd(values));
+    end
 end
 
 

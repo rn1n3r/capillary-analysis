@@ -1,4 +1,4 @@
-function getFOVFocusData (processedPath, expNames, measure)
+function fovData = getFOVFocusData (processedPath, expNames, measure)
 
     tic
     clean
@@ -21,9 +21,8 @@ function getFOVFocusData (processedPath, expNames, measure)
 
     % 14A
     for i = 1:size(expNames, 2)
-        I = imread([processedPath expNames{i} '/Functional-16bitImages/' expNames{i} '-16bit442Max.tif']);
         fname = getFnames([capPath '/442/' expNames{i} '/']);
-        fovData{i, 2} = getFOVfmeasures(measure, varFOV, fname, I);   
+        fovData{i, 2} = getFOVfmeasures(measure, varFOV, fname);   
         clear fnames;
     end
 

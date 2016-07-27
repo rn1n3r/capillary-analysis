@@ -32,7 +32,7 @@ function listFM = getPathFmeasures (fname, var, id, fmStr)
 %             gprops = graycoprops(glcm);
 %             fm(i) = gprops.Correlation;
 
-            fm(i) = fmeasure(frame, fmStr, listROI(i, :));
+            fm(j) = fmeasure(frame, fmStr, listROI(j, :));
 
         end
 

@@ -11,7 +11,7 @@ function fovData = getFOVFocusData (processedPath, expNames, measure)
 
     processedPath = '/Volumes/DATA-2/Processed/20160722e/';
     capPath = strrep(processedPath, 'Processed', 'Captured');
-    expNames = {'X20-14A', 'X20-14A-1', 'X20-14A-2', 'X20-14A-3'};
+    expNames = {'X20-13A', 'X20-13A-1', 'X20-13A-2', 'X20-13A-3'};
 
     fovData = cell(size(expNames, 2), 2);
     fovData(:, 1) = expNames';

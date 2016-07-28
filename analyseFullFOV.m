@@ -1,4 +1,4 @@
-function analyseFullFOV(fov)
+function analyseFullFOV(fov, targetID)
 
 minVal = 0;
 maxVal = 0;
@@ -20,8 +20,8 @@ end
 
 
 for i = 1:size(fov, 1)
-    if fov{i, 1} == 600
-        values = fov{i, 2};
+    if fov{i, 1} == targetID || targetID == 0
+        values = nanmean(fov{i, 2}, 2);
         figure;
 
         scatter(1:520, nanmean(values, 2));
@@ -29,7 +29,14 @@ for i = 1:size(fov, 1)
         title(num2str(fov{i, 1}));
         xlabel('Y-coordinate on path');
         ylabel('Average focus level');
-        fprintf('%d: Average std = %f\n', fov{i, 1}, nanmean(nanstd(values,0,2))/1e5);
+        figure;
+        scatter(1:520, nanstd(fov{i ,2}, 0, 2)./values);
+        %axis([1 520 minVal maxVal]);
+        title([num2str(fov{i, 1}) ' CV']);
+        fprintf('%d\n', fov{i, 1});
+        fprintf('Average mean = %d\n', nanmean(values));
+        fprintf('Average std = %d\n', nanmean(nanstd(fov{i ,2}, 0, 2)));
+        fprintf('Average CV = %d\n', nanmean(nanstd(fov{i ,2}, 0, 2)./values));
     end
     
 end

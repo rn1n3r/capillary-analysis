@@ -9,9 +9,9 @@ function fovData = getFOVFocusData (processedPath, expNames, measure)
     % Set measure you want to test
     measure = 'BREN';
 
-    processedPath = '/Volumes/DATA-2/Processed/20160722e/';
+    %processedPath = '/Volumes/DATA-2/Processed/20160722e/';
     capPath = strrep(processedPath, 'Processed', 'Captured');
-    expNames = {'X20-13A', 'X20-13A-1', 'X20-13A-2', 'X20-13A-3'};
+    %expNames = {'X20-13A', 'X20-13A-1', 'X20-13A-2', 'X20-13A-3'};
 
     fovData = cell(size(expNames, 2), 2);
     fovData(:, 1) = expNames';

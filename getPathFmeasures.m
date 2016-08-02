@@ -14,7 +14,7 @@ function listFM = getPathFmeasures (fname, var, id, fmStr)
     % Store the max/min/avg fm, last column used to store number of RBCs
     % detected at that y-coordinate
         
-    listFM = zeros(520, 4);
+    listFM = zeros(520, 1260);
     listFM(:, 2) = 1e7;
     
     for i = 1:numel(fname)
@@ -39,24 +39,26 @@ function listFM = getPathFmeasures (fname, var, id, fmStr)
         % Normalize by RBC circumference
         fm = fm./circ;
         
+        
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)
             for j = 1:numel(fm)
-                % Max
-                if listFM(listROI(j, 2), 1) < fm(j)
-                    listFM(listROI(j, 2), 1) = fm(j);
-                end
-                % Min
-                if listFM(listROI(j, 2), 2) > fm(j) && ~isnan(fm(j))
-                    listFM(listROI(j, 2), 2) = fm(j);
-                end
-                % Sum
-                listFM(listROI(j, 2), 3) = listFM(listROI(j, 2), 3) + fm(j);
-                listFM(listROI(j, 2), 4) = listFM(listROI(j, 2), 4) + 1; % RBC count
+%                 % Max
+%                 if listFM(listROI(j, 2), 1) < fm(j)
+%                     listFM(listROI(j, 2), 1) = fm(j);
+%                 end
+%                 % Min
+%                 if listFM(listROI(j, 2), 2) > fm(j) && ~isnan(fm(j))
+%                     listFM(listROI(j, 2), 2) = fm(j);
+%                 end
+%                 % Sum
+%                 listFM(listROI(j, 2), 3) = listFM(listROI(j, 2), 3) + fm(j);
+%                 listFM(listROI(j, 2), 4) = listFM(listROI(j, 2), 4) + 1; % RBC count
+                listFM(listROI(j, 2), i) = fm(j);
             end
         end
     end
-    listFM(:, 3) = listFM(:,3)./listFM(:, 4); % To finish average calculation 
+    %listFM(:, 3) = listFM(:,3)./listFM(:, 4); % To finish average calculation 
     listFM(listFM == 0) = NaN;
     listFM(listFM == 1e7) = NaN;
 

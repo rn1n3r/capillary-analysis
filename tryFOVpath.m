@@ -1,7 +1,7 @@
 tic
 % Clean and get variance data
 clean;
-load('data/varianceData.mat');
+load('/Users/edwardho/data/varianceData.mat');
 
 % Start parallel processing pool
 matlabpool;

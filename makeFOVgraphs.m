@@ -23,7 +23,7 @@ fprintf('Mean is: %d\n', maxMean);
 for i = 1:size(fov, 1)
     if targetID == 0 || targetID == fov{i, 1}
     values = fov{i,2}(:, 3);
-    figure;
+    subplot(2, size(fov,1)/2, i);
     scatter(1:520, values);
     title(num2str(fov{i, 1}));
     xlabel('Y-coordinate on path');

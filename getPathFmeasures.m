@@ -7,7 +7,7 @@
 % This function only does one capillary to make parallel processing easier
 % in getFOVfmeasures.m
 
-function listFM = getPathFmeasures (fname, var, id, fmStr)
+function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
 
     area = getCapillaries(var);
     
@@ -20,7 +20,7 @@ function listFM = getPathFmeasures (fname, var, id, fmStr)
     for i = 1:numel(fname)
         frame = imread(fname{i});
         
-%         frame = log10(double(maxImg)./double(frame));
+        %frame = log10(double(maxImg)./double(frame));
         
         [listROI, circ] = findRBC(frame, area, id);
         fm = zeros(size(listROI, 1), 1);
@@ -33,11 +33,14 @@ function listFM = getPathFmeasures (fname, var, id, fmStr)
 %             fm(i) = gprops.Correlation;
 
             fm(j) = fmeasure(frame, fmStr, listROI(j, :));
+            fm(j) = fm(j)/mean2(imcrop(maxImg, listROI(j, :)));
 
         end
 
         % Normalize by RBC circumference
         fm = fm./circ;
+        
+        
         
         
         % In the case that there are NO RBCs found in the path

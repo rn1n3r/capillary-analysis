@@ -1,6 +1,6 @@
 % Gets the fmeasures of all capillaries in the FOV (from fname)
 % Make sure to start parallel processing pool!
-function fov = getFOVfmeasures(measure, var, fname)
+function fov = getFOVfmeasures(measure, var, fname, I)
     
     % Get the capillary IDs in the FOV
     [area, idList] = getCapillaries(var);
@@ -9,7 +9,7 @@ function fov = getFOVfmeasures(measure, var, fname)
     
     tic    
     parfor i = 1:size(idList, 1)
-        temp = getPathFmeasures(fname, var, idList(i, 1), measure);
+        temp = getPathFmeasures(fname, var, idList(i, 1), measure, I);
         fov{i, 2} = temp;
     end
     

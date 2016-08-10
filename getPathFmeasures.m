@@ -57,7 +57,7 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
 %                 % Sum
 %                 listFM(listROI(j, 2), 3) = listFM(listROI(j, 2), 3) + fm(j);
 %                 listFM(listROI(j, 2), 4) = listFM(listROI(j, 2), 4) + 1; % RBC count
-                listFM(listROI(j, 2), i) = fm(j);
+                listFM(uint16(listROI(j, 2)+listROI(j,4)/2), i) = fm(j);
             end
         end
     end

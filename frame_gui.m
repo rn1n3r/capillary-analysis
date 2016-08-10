@@ -22,7 +22,7 @@ function varargout = frame_gui(varargin)
 
 % Edit the above text to modify the response to help frame_gui
 
-% Last Modified by GUIDE v2.5 16-Jun-2016 15:50:38
+% Last Modified by GUIDE v2.5 10-Aug-2016 11:44:50
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -102,9 +102,9 @@ path = strrep(path, '/442', '');
 path = strrep(path, '/454', '');
 
 
-fovName = path(strfind(path, 'X20'):end-1);
+handles.fovName = path(strfind(path, 'X20'):end-1);
 %handles.labelledImage = [path 'JPEGImages/' fovName 'FunctionalImageLabelled.jpg'];
-handles.labelledImage = [path 'VesselGeometry/' fovName 'GradientImageLabelled.fig'];
+handles.labelledImage = [path 'VesselGeometry/' handles.fovName 'GradientImageLabelled.fig'];
 
 % Show the first frame in axes1
 imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
@@ -131,6 +131,7 @@ handles.textStr = get(myhandle, 'string');
 delete(gcf);
 axes(handles.axes2);
 
+
 for i = 1:size(handles.position, 1)
     cellData = handles.position{i};
     if cellData(2) >= 0 && cellData(1) >= 0 && ~strcmp(handles.textStr{i}, 'pixels')
@@ -139,6 +140,7 @@ for i = 1:size(handles.position, 1)
 
 end
 
+freezeColors
 guidata(hObject, handles);
 
 
@@ -217,21 +219,30 @@ function uipanel4_SelectionChangeFcn(hObject, eventdata, handles)
 % If the frame has not been loaded yet, do nothing
 if isempty(handles.fnames)
     return;
-end
-
-if strcmp(get(hObject, 'Tag'), 'capillary_button')
+    
+elseif strcmp(get(hObject, 'Tag'), 'capillary_button')
     handles.area = handles.capArea;
-else
-    handles.area = ones(520, 696);
-end
-
-handles.rangeFiltSelected = 0;
-if strcmp(get(hObject, 'Tag'), 'range_button')
+    handles.rangeFiltSelected = 0;
+    refresh(handles);
+    
+elseif strcmp(get(hObject, 'Tag'), 'range_button')
     handles.area = handles.capArea;
     handles.rangeFiltSelected = 1;
+    refresh(handles);
+    
+elseif strcmp(get(hObject, 'Tag'), 'heatmap_button')
+    load('bren_norm-BOTH.mat');
+    imshow(heatMap(fov3, getCapillaries(handles.varianceImage), false), 'Parent', handles.axes1, 'DisplayRange', []);
+    colormap(handles.axes1, jet);
+    
+else
+    handles.area = ones(520, 696);
+    handles.rangeFiltSelected = 0;
+    refresh(handles);
 end
 
-refresh(handles);
+
+    
 
 
 guidata(hObject, handles);
@@ -319,6 +330,7 @@ else
         end
 
     end
+    freezeColors
     
     
     
@@ -404,3 +416,11 @@ subs = sortrows(subs, 1);
 coords(i, :) = subs(1, :);
 end
 
+
+% --- Executes on button press in heatmap_button.
+function heatmap_button_Callback(hObject, eventdata, handles)
+% hObject    handle to heatmap_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of heatmap_button

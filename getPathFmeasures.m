@@ -33,15 +33,14 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
 %             fm(i) = gprops.Correlation;
 
             fm(j) = fmeasure(frame, fmStr, listROI(j, :));
+            
+            % Normalize by background intensity
             fm(j) = fm(j)/mean2(imcrop(maxImg, listROI(j, :)));
 
         end
 
         % Normalize by RBC circumference
         fm = fm./circ;
-        
-        
-        
         
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)
@@ -57,7 +56,7 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
 %                 % Sum
 %                 listFM(listROI(j, 2), 3) = listFM(listROI(j, 2), 3) + fm(j);
 %                 listFM(listROI(j, 2), 4) = listFM(listROI(j, 2), 4) + 1; % RBC count
-                listFM(uint16(listROI(j, 2)+listROI(j,4)/2), i) = fm(j);
+                listFM(listROI(j, 2), i) = fm(j);
             end
         end
     end

@@ -1,3 +1,4 @@
+
 tic
 % Clean and get variance data
 clean;
@@ -7,14 +8,14 @@ if matlabpool('size') == 0
     matlabpool;
 end
 % Set measure you want to test
-measure = {'CURV', 'GLLV'};
+measure = {'BREN'};
 
 % Defaults
-%mainPath = '/Volumes/DATA-2/Captured/20150619/';
-%fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
+mainPath = '/Volumes/DATA-2/Captured/20150619/';
+fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 
-mainPath = '/Volumes/DATA-2/Captured/20160722e/';
-fovList = {'X20-13A', 'X20-13A-1', 'X20-13A-2', 'X20-13A-3'};
+% mainPath = '/Volumes/DATA-2/Captured/20160722e/';
+% fovList = {'X20-13A', 'X20-13A-1', 'X20-13A-2', 'X20-13A-3'};
 
 fovListName = fovList;
 
@@ -35,7 +36,7 @@ for j = 1:length(measure)
         fprintf('%s-%s...done!\n', measure{j}, fovList{i})
     end
 
-    save(['../data/asher/' measure{j} '-data'], 'fovData');
+    save(['../data/asher/' measure{j} '-data-20150619000'], 'fovData');
 
 end
 % Close pool

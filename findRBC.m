@@ -19,14 +19,14 @@ function [listROI, circ] = findRBC (frame, area, id)
     rectCoords = autoGetRect(size(frame), [], [], indices, 0);
     rect = imcrop(frame, rectCoords);
     area = imcrop(area, rectCoords);
-    
+
     % Canny edge detection to find the borders of the  RBCs
     rect = edge(rect, 'canny', 0.26);
     rect(area ~= id) = 0;
     
     % Label all continuous regions
     rect = bwlabel(rect);
-    
+
     % Processing
     for i = 1:max(rect(:))
         % Delete regions that are very small (arbitrarily set to 10 px)
@@ -48,6 +48,7 @@ function [listROI, circ] = findRBC (frame, area, id)
     
     % Relabel
     rect = bwlabel(rect);
+    
     
     % Initialize our data structure to store the rect info of each RBC
     % Also store the circumference
@@ -110,10 +111,11 @@ function rect = autoGetRect (size, sizeLimit, rect, indices, p)
         yo = 1;
     end
     if xf + rect(1) > sizeLimit(2)
-        xf = size(2);
+        xf = sizeLimit(2) - rect(1);
     end
     if yf + rect(2) > sizeLimit(1)
-        yf = size(1);
+        yf = sizeLimit(1) - rect(2);
+
     end
             
     

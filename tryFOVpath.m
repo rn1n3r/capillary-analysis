@@ -1,57 +1,43 @@
 tic
 % Clean and get variance data
 clean;
-load('/Users/edwardho/data/varianceData.mat');
 
 % Start parallel processing pool
-matlabpool;
-
+if matlabpool('size') == 0
+    matlabpool;
+end
 % Set measure you want to test
-measure = 'BREN';
+measure = {'BREN', 'CONT', 'CURV'};
 
-% FOV3
-fname = getFnames('/Volumes/DATA-2/Captured/20150619/442/X20-FOV3-B/');
-maxImg = imread('/Volumes/DATA-2/Processed/20150619/X20-FOV3-B/Functional-16bitImages/X20-FOV3-B-16bit442Max.tif');
-fov3 = getFOVfmeasures(measure, var3, fname, maxImg);   
+% Defaults
+%mainPath = '/Volumes/DATA-2/Captured/20150619/';
+%fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 
-clear fnames;
+mainPath = '/Volumes/DATA-2/Captured/20160722e/';
+fovList = {'X20-13A', 'X20-13A-1', 'X20-13A-2', 'X20-13A-3'};
 
-% FOV5
-fname = getFnames('/Volumes/DATA-2/Captured/20150619/442/X20-FOV5-B/');
-maxImg = imread('/Volumes/DATA-2/Processed/20150619/X20-FOV5-B/Functional-16bitImages/X20-FOV5-B-16bit442Max.tif');
-fov5 = getFOVfmeasures(measure, var5, fname, maxImg);  
+fovListName = fovList;
+
+for i = 1:length(fovListName)
+    fovListName{i} = strrep(fovList{i}, '-', '');
+end
+
+for j = 1:length(measure)
+    
+    fovData = cell2struct(cell(size(fovListName)), fovListName, 2);
 
 
-clear fnames;
+    for i = 1:length(fovList)
+        fname = getFnames([mainPath '442/' fovList{i} '/']);
+        maxImg = imread([strrep(mainPath, 'Captured', 'Processed') fovList{i} '/Functional-16bitImages/' fovList{i} '-16bit442Max.tif']);
+        varImg = imread([strrep(mainPath, 'Captured', 'Processed')  fovList{i} '/Functional-16bitImages/' fovList{i} '-16bit442Var.tif']);
+        fovData.(fovListName{i}) = getFOVfmeasures(measure{i}, varImg, fname, maxImg);
+        fprintf('%s-%s...done!\n', measure{j}, fovList{i})
+    end
 
-% FOV7
-fname = getFnames('/Volumes/DATA-2/Captured/20150619/442/X20-FOV7-B/');
-maxImg = imread('/Volumes/DATA-2/Processed/20150619/X20-FOV7-B/Functional-16bitImages/X20-FOV7-B-16bit442Max.tif');
-fov7 = getFOVfmeasures(measure, var7, fname, maxImg);   
+    save(['data/asher/' measure{j} '-data'], 'fovData');
 
-clear fnames;
-
-% FOV8
-fname = getFnames('/Volumes/DATA-2/Captured/20150619/442/X20-FOV8-B/');
-maxImg = imread('/Volumes/DATA-2/Processed/20150619/X20-FOV8-B/Functional-16bitImages/X20-FOV8-B-16bit442Max.tif');
-fov8 = getFOVfmeasures(measure, var8, fname, maxImg);   
-
-clear fnames;
-
-% FOVp22
-fname = getFnames('/Volumes/DATA-2/Captured/20150619/442/X20-FOVp2-2-B/');
-maxImg = imread('/Volumes/DATA-2/Processed/20150619/X20-FOVp2-2-B/Functional-16bitImages/X20-FOVp2-2-B-16bit442Max.tif');
-fovp22 = getFOVfmeasures(measure, varp22, fname, maxImg);  
-
-clear fnames;
-
-% FOVp24
-fname = getFnames('/Volumes/DATA-2/Captured/20150619/442/X20-FOVp2-4-P/');
-maxImg = imread('/Volumes/DATA-2/Processed/20150619/X20-FOVp2-4-P/Functional-16bitImages/X20-FOVp2-4-P-16bit442Max.tif');
-fovp24 = getFOVfmeasures(measure, varp24, fname, maxImg);   
-
-clear fnames;
-
+end
 % Close pool
 matlabpool close;
 toc

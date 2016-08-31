@@ -84,12 +84,12 @@ for i = 1:size(fov, 1)
         ylabel('Average focus level');
         
         if ~noCV
-            subplot(2, size(fov, 1), i+size(fov, 1));
+            subplot(2, subPlotWidth, i+subPlotWidth);
             scatter(1:520, nanstd(fov{i, 2}, 0, 2)./values);
             axis([1 520 0 maxValCV]);
             title([num2str(fov{i, 1}) ' CV']);
         end
-        fprintf('%d\n', fov{i, 1});
+        fprintf('%s\n', fov{i, 1});
         fprintf('Average mean = %d\n', nanmean(values));
         fprintf('Average std = %d\n', nanmean(nanstd(fov{i ,2}, 0, 2)));
         fprintf('Average CV = %d\n', nanmean(nanstd(fov{i ,2}, 0, 2)./values));

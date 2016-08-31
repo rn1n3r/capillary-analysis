@@ -29,9 +29,9 @@ for j = 1:length(measure)
 
     for i = 1:length(fovList)
         fname = getFnames([mainPath '442/' fovList{i} '/']);
-        maxImg = imread([strrep(mainPath, 'Captured', 'Processed') fovList{i} '/Functional-16bitImages/' fovList{i} '-16bit442Max.tif']);
+        maxImg = imread([strrep(mainPath, 'Captured', '  Processed') fovList{i} '/Functional-16bitImages/' fovList{i} '-16bit442Max.tif']);
         varImg = imread([strrep(mainPath, 'Captured', 'Processed')  fovList{i} '/Functional-16bitImages/' fovList{i} '-16bit442Var.tif']);
-        fovData.(fovListName{i}) = getFOVfmeasures(measure{i}, varImg, fname, maxImg);
+        fovData.(fovListName{i}) = getFOVfmeasures(measure{j}, varImg, fname, maxImg);
         fprintf('%s-%s...done!\n', measure{j}, fovList{i})
     end
 

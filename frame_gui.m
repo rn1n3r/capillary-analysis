@@ -22,7 +22,7 @@ function varargout = frame_gui(varargin)
 
 % Edit the above text to modify the response to help frame_gui
 
-% Last Modified by GUIDE v2.5 10-Aug-2016 11:44:50
+% Last Modified by GUIDE v2.5 31-Aug-2016 14:22:57
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -66,7 +66,7 @@ handles.labelledImage = [];
 handles.frameNumber = 1;
 handles.rangeFiltSelected = 0;
 handles.textSelected = 0;
-
+handles.boxSelected = 0;
 
 % Update handles structure
 guidata(hObject, handles);
@@ -354,12 +354,18 @@ function axes1_CreateFcn(hObject, eventdata, handles)
 function refresh (handles)
 axes(handles.axes1);
 showArea = imread(handles.fnames{handles.frameNumber});
-            
+
+    
 if handles.rangeFiltSelected
     showArea = rangefilt(showArea);
     showArea(~handles.area) = 0;
     imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', []);
 else
+    
+    if handles.boxSelected
+        showArea = drawRBCrect(showArea, handles.varianceImage, handles.idList);
+
+    end
     showArea(~handles.area) = 0;
     imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
 end
@@ -375,7 +381,8 @@ if handles.textSelected
         text(handles.coords(i, 2), handles.coords(i, 1), num2str(handles.idList(i, 1)), 'Color', color);
     end
 end
-    
+
+
 
 
 % --- Executes on button press in labelbutton.
@@ -389,6 +396,22 @@ if get(hObject, 'Value')
     handles.textSelected = 1;
 else
     handles.textSelected = 0;
+end
+
+refresh(handles);
+guidata(hObject, handles);
+
+% --- Executes on button press in box_button.
+function box_button_Callback(hObject, eventdata, handles)
+% hObject    handle to box_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of box_button
+if get(hObject, 'Value')
+    handles.boxSelected = 1;
+else
+    handles.boxSelected = 0;
 end
 
 refresh(handles);
@@ -429,3 +452,5 @@ function heatmap_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of heatmap_button
+
+

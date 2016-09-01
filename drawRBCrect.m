@@ -1,16 +1,17 @@
 
 
-function I = drawRBCrect(I, varImg, idList)
+function boxI = drawRBCrect(I, varImg, idList)
     area = getCapillaries(varImg);
+    boxI = I;
     for i = 1:length(idList)
        
         listROI = findRBC(I, area, idList(i));
         if ~isempty(listROI)
             for j = 1:size(listROI, 1)
-                I(listROI(j, 2):listROI(j,4)+listROI(j,2), listROI(j,1)) = 23;
-                I(listROI(j, 2):listROI(j,4)+listROI(j,2), listROI(j,1)+listROI(j,3)) = 23;
-                I(listROI(j, 2), listROI(j,1):listROI(j,1)+listROI(j,3)) = 23;
-                I(listROI(j, 2)+listROI(j,4), listROI(j,1):listROI(j,1)+listROI(j,3)) = 23;
+                boxI(listROI(j, 2):listROI(j,4)+listROI(j,2), listROI(j,1)) = 2^16;
+                boxI(listROI(j, 2):listROI(j,4)+listROI(j,2), listROI(j,1)+listROI(j,3)) = 2^16;
+                boxI(listROI(j, 2), listROI(j,1):listROI(j,1)+listROI(j,3)) = 2^16;
+                boxI(listROI(j, 2)+listROI(j,4), listROI(j,1):listROI(j,1)+listROI(j,3)) = 2^16;
             end
         end
     end

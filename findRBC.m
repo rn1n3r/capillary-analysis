@@ -19,14 +19,15 @@ function [listROI, circ] = findRBC (frame, area, id)
     rectCoords = autoGetRect(size(frame), [], [], indices, 0);
     rect = imcrop(frame, rectCoords);
     area = imcrop(area, rectCoords);
-
+    
     % Canny edge detection to find the borders of the  RBCs
     rect = edge(rect, 'canny', 0.26);
+     
     rect(area ~= id) = 0;
     
     % Label all continuous regions
     rect = bwlabel(rect);
-
+   
     % Processing
     for i = 1:max(rect(:))
         % Delete regions that are very small (arbitrarily set to 10 px)
@@ -40,10 +41,10 @@ function [listROI, circ] = findRBC (frame, area, id)
         
         % If the standard deviation of the x-values is < 2 (again,
         % arbitrarily defined), then treat delete it (to get rid of lines,
-        % etc)
-        if std(cellSubs) < 2
-            rect(rect == i) = 0;
-        end
+%         % etc)
+%         if std(cellSubs) < 2
+%             rect(rect == i) = 0;
+%         end
     end
     
     % Relabel

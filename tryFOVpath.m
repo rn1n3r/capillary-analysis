@@ -36,7 +36,7 @@ for j = 1:length(measure)
         fprintf('%s-%s...done!\n', measure{j}, fovList{i})
     end
 
-    save(['../data/asher/' measure{j} '-data-20150619000'], 'fovData');
+    save(['../data/asher/' measure{j} '-data-20150619newRBC'], 'fovData');
 
 end
 % Close pool

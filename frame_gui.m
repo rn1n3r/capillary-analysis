@@ -22,7 +22,7 @@ function varargout = frame_gui(varargin)
 
 % Edit the above text to modify the response to help frame_gui
 
-% Last Modified by GUIDE v2.5 31-Aug-2016 14:22:57
+% Last Modified by GUIDE v2.5 02-Sep-2016 10:13:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -452,5 +452,3 @@ function heatmap_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of heatmap_button
-
-

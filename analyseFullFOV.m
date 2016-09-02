@@ -75,8 +75,8 @@ for i = 1:size(fov, 1)
         
         hold on
         scatter(1:520, fmean, [], 'b');
-        scatter(1:520, underThresh, [], [0.5 0.5 0.5]);
-        scatter(1:520, nanstd(fov{i ,2}, 0, 2), [], 'r');
+        scatter(1:520, underThresh, [], 'r');
+        scatter(1:520, nanstd(fov{i ,2}, 0, 2), [], [0.5 0.5 0.5]);
         hold off
         axis([1 520 minVal maxVal]);
         title(num2str(fov{i, 1}));

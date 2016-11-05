@@ -98,19 +98,26 @@ handles.fnames = fnames;
 % Get the path string and use it to find the labelled image
 path = strrep(path, 'Captured', 'Processed');
 
-path = strrep(path, '/442', '');
-path = strrep(path, '/454', '');
+
+if ispc
+    path = strrep(path, '\442', '');
+    path = strrep(path, '\454', '');
+else
+    path = strrep(path, '/442', '');
+    path = strrep(path, '/454', '');
+end
+
 
 
 handles.fovName = path(strfind(path, 'X20'):end-1);
 
-handles.labelledImage = [path 'VesselGeometry/' handles.fovName 'GradientImageLabelled.fig'];
+handles.labelledImage = strrep([path 'VesselGeometry/' handles.fovName 'GradientImageLabelled.fig'], '\', '/');
 
 % Show the first frame in axes1
 imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
 
 % Calculate and store the variance image of the frames
-handles.varianceImage = imread([path 'Functional-16bitImages/' handles.fovName '-16bit442Var.tif']);
+handles.varianceImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName '-16bit442Var.tif'], '\', '/'));
 
 % Store the capillary area mask
 [handles.capArea, handles.idList] = getCapillaries(handles.varianceImage);
@@ -137,7 +144,6 @@ if exist(handles.labelledImage, 'file')
         if cellData(2) >= 0 && cellData(1) >= 0 && ~strcmp(handles.textStr{i}, 'pixels')
             text(cellData(1), cellData(2), handles.textStr{i}, 'Color', 'white');
         end
-
     end
 end
 

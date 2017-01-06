@@ -1,3 +1,6 @@
+% USED TO COMPARE THE SAME FOV AT DIFFERENT FOCAL PLANES (ASHER'S DATA)
+% compareFocalPlanes(fov1, fov2, ...)
+
 function compareFocalPlanes(varargin)
 
 targetID = 600;

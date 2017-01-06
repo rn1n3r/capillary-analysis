@@ -1,34 +1,39 @@
-function fovData = getFOVFocusData (processedPath, expNames, measure)
+
+function fovData = getFOVFocusData (processedPath, fovList, measure)
 
     tic
-    clean
+    
 
     % Start parallel processing pool
-    matlabpool;
-
-    % Set measure you want to test
-    measure = 'BREN';
-
-    %processedPath = '/Volumes/DATA-2/Processed/20160722e/';
-    capPath = strrep(processedPath, 'Processed', 'Captured');
-    %expNames = {'X20-13A', 'X20-13A-1', 'X20-13A-2', 'X20-13A-3'};
-
-    fovData = cell(size(expNames, 2), 2);
-    fovData(:, 1) = expNames';
-
-
-    varFOV = imread([processedPath expNames{1} '/Functional-16bitImages/' expNames{1} '-16bit442Var.tif']);
-
-    % 14A
-    for i = 1:size(expNames, 2)
-        fname = getFnames([capPath '/442/' expNames{i} '/']);
-        fovData{i, 2} = getFOVfmeasures(measure, varFOV, fname);   
-        clear fnames;
+    if matlabpool('size') == 0
+        matlabpool;
     end
 
+    fovListName = fovList;
+
+    for i = 1:length(fovListName)
+        fovListName{i} = strrep(fovList{i}, '-', '');
+    end
+
+    capPath = strrep(processedPath, 'Processed', 'Captured');
+
+    fovData = cell2struct(cell(size(fovListName)), fovListName, 2);
 
 
-    % Close pool
-    matlabpool close;
+    for i = 1:length(fovList)
+        fname = getFnames([capPath '/442/' fovList{i} '/']);
+        maxImg = imread([processedPath fovList{i} '/Functional-16bitImages/' fovList{i} '-16bit442Max.tif']);
+        varImg = imread([processedPath fovList{i} '/Functional-16bitImages/' fovList{i} '-16bit442Var.tif']);
+        
+        
+        fovData.(fovListName{i}) = getFOVfmeasures(measure, varImg, fname, maxImg);
+        
+
+        fprintf('%s-%s...done!\n', measure, fovList{i})
+    end
+
+   
+    
+
     toc
 end

@@ -39,12 +39,12 @@ function [listROI, circ] = findRBC (frame, area, id)
         cellIndices = find(rect == i);
         [~, cellSubs] = ind2sub(size(rect), cellIndices);        
         
-        % If the standard deviation of the x-values is < 2 (again,
-        % arbitrarily defined), then treat delete it (to get rid of lines,
-%         % etc)
-%         if std(cellSubs) < 2
-%             rect(rect == i) = 0;
-%         end
+        %If the standard deviation of the x-values is < 2 (again,
+        %arbitrarily defined), then treat delete it (to get rid of lines,
+        % etc)
+        if std(cellSubs) < 2
+            rect(rect == i) = 0;
+        end
     end
     
     % Relabel

@@ -1,6 +1,6 @@
 % Try and find the subregion in a capillary path that is in-focus
-% Returns the max/min/avg value of the focus measure found in the RBC at each
-% location along the path of the capillary
+% Returns all values of the specified focus measures at all y-coordinates
+% throughout the 1260 frames
 %
 % The range is 1 - 520, so if there is no capillary then the value is NaN
 %
@@ -27,11 +27,6 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
         fm = zeros(size(listROI, 1), 1);
     
         for j = 1:size(fm, 1)        
-%             fm(i) = sum(sum(imcrop(edgeI, listROI(i, :))));
-% 
-%             glcm = graycomatrix(imcrop(I, listROI(i, :)));
-%             gprops = graycoprops(glcm);
-%             fm(i) = gprops.Correlation;
 
             fm(j) = fmeasure(frame, fmStr, listROI(j, :));
             
@@ -46,22 +41,12 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)
             for j = 1:numel(fm)
-%                 % Max
-%                 if listFM(listROI(j, 2), 1) < fm(j)
-%                     listFM(listROI(j, 2), 1) = fm(j);
-%                 end
-%                 % Min
-%                 if listFM(listROI(j, 2), 2) > fm(j) && ~isnan(fm(j))
-%                     listFM(listROI(j, 2), 2) = fm(j);
-%                 end
-%                 % Sum
-%                 listFM(listROI(j, 2), 3) = listFM(listROI(j, 2), 3) + fm(j);
-%                 listFM(listROI(j, 2), 4) = listFM(listROI(j, 2), 4) + 1; % RBC count
+
                 listFM(listROI(j, 2), i) = fm(j);
             end
         end
     end
-    %listFM(:, 3) = listFM(:,3)./listFM(:, 4); % To finish average calculation 
+ 
     listFM(listFM == 0) = NaN;
     listFM(listFM == 1e7) = NaN;
 

@@ -98,7 +98,7 @@ for i = 1:size(fov, 1)
             axis([1 520 0 200]);
             title([num2str(fov{i, 1}) ' CV']);
         end
-        fprintf('%s\n', fov{i, 1});
+        fprintf('%d\n', fov{i, 1});
         fprintf('Average mean = %d\n', nanmean(values));
         fprintf('Average std = %d\n', nanmean(nanstd(fov{i ,2}, 0, 2)));
         fprintf('Average CV = %d\n', nanmean(nanstd(fov{i ,2}, 0, 2)./values));

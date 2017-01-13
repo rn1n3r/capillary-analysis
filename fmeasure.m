@@ -79,7 +79,7 @@ switch upper(Measure)
         Rx = imfilter(double(Image), Gx, 'conv', 'replicate');
         Ry = imfilter(double(Image), Gy, 'conv', 'replicate');
         FM = Rx.^2+Ry.^2;
-        %FM = mean2(FM);
+        FM = mean2(FM);
         
     case 'GLVA' % Graylevel variance (Krotkov86)
         FM = std2(Image);

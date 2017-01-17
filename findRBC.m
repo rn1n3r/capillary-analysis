@@ -75,33 +75,38 @@ function [listROI, circ] = findRBC (frame, area, id)
     % Attempt to fix the problem of boxes being too big by splitting them
     % up: loop through listROI to find large boxes (greater than 72 px
     % (arb)) and divide them by 36 (arb)
-%     temp = zeros(size(listROI,1)*3, 4);
-%     counter = 1;
-%     for i = 1:size(listROI, 1)
-%         size(listROI)
-%         i
-%         temp(counter, 1:3) = listROI(i, 1:3);
-%         if listROI(i, 4) >= 72
-%             numOfDiv = floor(listROI(i, 4) / 36); % how many times 36 divides evenly
-%             hLast = listROI(i, 4) - 36*numOfDiv;
-%             temp(counter:counter+numOfDiv, 4) = 36;
-%             temp(counter+numOfDiv+1, 4) = hLast;
-%             
-%             temp(counter:counter+numOfDiv+1, [1 3]) = listROI(i*ones(1,numOfDiv+2), [1 3]);
-%             
-%             addToY = 36*[0:numOfDiv]';
-%             addToY = [addToY; addToY(end) + hLast];
-%             temp(counter:counter+numOfDiv+1, 2) = listROI(i, 2) + addToY;
-%             
-%             counter = counter + numOfDiv + 2;
-%         else
-%             temp(counter, 4) = listROI(i, 4);
-%             counter = counter + 1;
-%         end
-%         
-%     end
-%     temp(~any(temp, 2), :) = [];
-%     listROI = temp;
+    temp = zeros(size(listROI,1)*3, 4);
+    counter = 1;
+    for i = 1:size(listROI, 1)
+        temp(counter, 1:3) = listROI(i, 1:3);
+        if listROI(i, 4) >= 72
+            numOfDiv = floor(listROI(i, 4) / 36); % how many times 36 divides evenly
+            hLast = listROI(i, 4) - 36*numOfDiv;
+            
+            
+            temp(counter:counter+numOfDiv-1, 4) = 36;
+            temp(counter:counter+numOfDiv-1, [1 3]) = listROI(i*ones(1,numOfDiv), [1 3]);
+            addToY = 36*(0:numOfDiv-1)';
+            temp(counter:counter+numOfDiv-1, 2) = listROI(i, 2) + addToY;
+            
+            counter = counter+numOfDiv;
+            
+            if hLast ~= 0
+                temp(counter+numOfDiv, 4) = hLast;
+                temp(counter+numOfDiv, [1 3]) = listROI(i, [1 3]);
+                temp(counter+numOfDiv, 2) = listROI(i, 2) + addToY(end) + 36;
+                counter = counter + 1;
+                
+            end
+            
+        else
+            temp(counter, 4) = listROI(i, 4);
+            counter = counter + 1;
+        end
+        
+    end
+    temp(~any(temp, 2), :) = [];
+    listROI = temp
 
 
 end

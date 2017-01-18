@@ -6,11 +6,22 @@
 % area = capillary map from getCapillaries()
 % id = id of capillary of interest
 
-function [listROI, circ] = findRBC (frame, area, id)
+function [listROI, circ] = findRBC (frame, area, id, maxImg)
     
     
     % Apply edge detection and set all pixels that are not in the capillary
     % of interest to zero
+    
+    % FIRST, REMOVE THE BACKGROUND USING THE MAX IMAGE FROM THE ENTIRE
+    % VIDEO
+    % Yeah, I know it's not actually removing it since this "background"
+    % fluctuates but it's a lot better than nothing
+    frame = maxImg - frame;
+    
+    % Canny edge detection to find the borders of the  RBCs
+    % Use canny on the WHOLE FRAME first to avoid weird results, but please
+    % look into why
+    frame = edge(frame, 'canny', 0.26);
     
     % Find the indices of the edges in the path
     indices = find(area == id);
@@ -20,8 +31,7 @@ function [listROI, circ] = findRBC (frame, area, id)
     rect = imcrop(frame, rectCoords);
     area = imcrop(area, rectCoords);
     
-    % Canny edge detection to find the borders of the  RBCs
-    rect = edge(rect, 'canny', 0.26);
+    
      
     rect(area ~= id) = 0;
     

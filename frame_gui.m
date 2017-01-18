@@ -119,6 +119,10 @@ imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
 % Calculate and store the variance image of the frames
 handles.varianceImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName '-16bit442Var.tif'], '\', '/'));
 
+% Store the max image of the frames
+handles.maxImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName '-16bit442Max.tif'], '\', '/'));
+
+
 % Store the capillary area mask
 [handles.capArea, handles.idList] = getCapillaries(handles.varianceImage);
 
@@ -369,7 +373,7 @@ if handles.rangeFiltSelected
 else
     
     if handles.boxSelected
-        showArea = drawRBCrect(showArea, handles.varianceImage, handles.idList);
+        showArea = drawRBCrect(showArea, handles.varianceImage, handles.idList, handles.maxImage);
 
     end
     showArea(~handles.area) = 0;

@@ -75,22 +75,27 @@ function [listROI, circ] = findRBC (frame, area, id)
     % Attempt to fix the problem of boxes being too big by splitting them
     % up: loop through listROI to find large boxes (greater than 72 px
     % (arb)) and divide them by 36 (arb)
-    temp = zeros(size(listROI,1)*3, 4);
+    temp = zeros(size(listROI,1)*3, 4); % Temporary matrix to store growing listROI
     counter = 1;
+    
     for i = 1:size(listROI, 1)
         temp(counter, 1:3) = listROI(i, 1:3);
         if listROI(i, 4) >= 72
             numOfDiv = floor(listROI(i, 4) / 36); % how many times 36 divides evenly
             hLast = listROI(i, 4) - 36*numOfDiv;
             
-            
+            % Increment x0 y0 for each box and set y_distances
             temp(counter:counter+numOfDiv-1, 4) = 36;
             temp(counter:counter+numOfDiv-1, [1 3]) = listROI(i*ones(1,numOfDiv), [1 3]);
             addToY = 36*(0:numOfDiv-1)';
             temp(counter:counter+numOfDiv-1, 2) = listROI(i, 2) + addToY;
             
+            % Update counter assuming no leftover distancs
             counter = counter+numOfDiv;
             
+            % If the box we're dividing is not divisible by 36 (it rarely
+            % is), then this makes the box for the last y_distance
+            % Temporary solution as this box could be very small
             if hLast ~= 0
                 temp(counter+numOfDiv, 4) = hLast;
                 temp(counter+numOfDiv, [1 3]) = listROI(i, [1 3]);
@@ -106,7 +111,7 @@ function [listROI, circ] = findRBC (frame, area, id)
         
     end
     temp(~any(temp, 2), :) = [];
-    listROI = temp
+    listROI = temp;
 
 
 end

@@ -21,9 +21,9 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
         frame = imread(fname{i});
         
         %frame = log10(double(maxImg)./double(frame));
-        filteredFrame = conv2(double(frame), fspecial('log', 12, 16), 'same');
-        filteredFrame(filteredFrame < 0.5) = 0;
-        [listROI, circ] = findRBC(filteredFrame, area, id);
+%         filteredFrame = conv2(double(frame), fspecial('log', 12, 16), 'same');
+%         filteredFrame(filteredFrame < 0.5) = 0;
+        [listROI, circ] = findRBC(frame, area, id, maxImg);
         fm = zeros(size(listROI, 1), 1);
     
         for j = 1:size(fm, 1)        

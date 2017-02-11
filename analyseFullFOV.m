@@ -33,21 +33,22 @@ end
 
 % Get the min/max/maxCV for the axes
 for i = 1:size(fov, 1)
-    
-    values = nanmean(fov{i, 2}, 2);
-    
-    if (minVal == 0 || min(nanmean(values, 2)) < minVal)
-        minVal = min(nanmean(values, 2));
-    end
-    if maxVal < max(nanmean(values, 2))
-        maxVal = max(nanmean(values, 2));
-    end
-    
-    if maxValCV < max(nanstd(fov{i ,2}, 0, 2)./values);
-        maxValCV = max(nanstd(fov{i ,2}, 0, 2)./values);
-    end
-    if nanmean(values) > maxMean
-        maxMean = nanmean(values);
+    if any(targetID == fov{i, 1}) || targetID(1) == 0
+        values = nanmean(fov{i, 2}, 2);
+
+        if (minVal == 0 || min(nanmean(values, 2)) < minVal)
+            minVal = min(nanmean(values, 2));
+        end
+        if maxVal < max(nanmean(values, 2))
+            maxVal = max(nanmean(values, 2));
+        end
+
+        if maxValCV < max(nanstd(fov{i ,2}, 0, 2)./values);
+            maxValCV = max(nanstd(fov{i ,2}, 0, 2)./values);
+        end
+        if nanmean(values) > maxMean
+            maxMean = nanmean(values);
+        end
     end
 end
 

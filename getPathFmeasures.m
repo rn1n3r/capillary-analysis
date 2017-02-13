@@ -11,8 +11,7 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
 
     area = getCapillaries(var);
     
-    % Store the max/min/avg fm, last column used to store number of RBCs
-    % detected at that y-coordinate
+    % Stores the focus measure for all points across the entire minute
         
     listFM = zeros(520, 1260);
     listFM(:, 2) = 1e7;
@@ -41,8 +40,11 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
         % In the case that there are NO RBCs found in the path
         if ~isempty(fm)
             for j = 1:numel(fm)
-
-                listFM(listROI(j, 2), i) = fm(j);
+                ycoord = listROI(j, 2) + floor(listROI(j,4)/2);
+                if ycoord > 520
+                    ycoord = 520;
+                end
+                listFM(ycoord, i) = fm(j);
             end
         end
     end

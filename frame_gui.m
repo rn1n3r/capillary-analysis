@@ -246,8 +246,10 @@ elseif strcmp(get(hObject, 'Tag'), 'range_button')
     refresh(handles);
     
 elseif strcmp(get(hObject, 'Tag'), 'heatmap_button')
-    load('bren_norm-BOTH.mat');
-    imshow(heatMap(fov3, getCapillaries(handles.varianceImage), false), 'Parent', handles.axes1, 'DisplayRange', []);
+    %load('bren_norm-BOTH.mat');
+    load('../data/BREN.mat');
+    %imshow(heatMap(fov3, getCapillaries(handles.varianceImage), false), 'Parent', handles.axes1, 'DisplayRange', []);
+    imshow(heatMap(fovData.('X20FOV3B'), getCapillaries(handles.varianceImage), false), 'Parent', handles.axes1, 'DisplayRange', []);
     colormap(handles.axes1, jet);
     
 else

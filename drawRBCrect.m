@@ -5,7 +5,7 @@ function boxI = drawRBCrect(I, varImg, idList, maxImg)
     boxI = I;
     for i = 1:length(idList)
        
-        listROI = findRBC(I, area, idList(i), maxImg);
+        listROI = findRBC(I, area, idList(i), maxImg, 'notedge');
         if ~isempty(listROI)
             for j = 1:size(listROI, 1)
                 boxI(listROI(j, 2):listROI(j,4)+listROI(j,2), listROI(j,1)) = 2^16;

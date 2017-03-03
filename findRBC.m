@@ -2,27 +2,33 @@
 % Finds a rectangular region around each RBC so that focus measures can be
 % applied to compare each cell
 
-% frame = frame of FOV
+% frame = frame of FOV. If isEdge == 'edge', then this image is assumed to
+% be background removed, and the edges detected using canny
 % area = capillary map from getCapillaries()
 % id = id of capillary of interest
 
-function [listROI, circ] = findRBC (frame, area, id, maxImg)
+function [listROI, circ] = findRBC (frame, area, id, maxImg, isEdge)
     
+    if nargin < 3
+        isEdge = 'edge';
+    end
+
+    % If the isEdge parameter is not given, apply edge detection
+    % Set all pixels that are not in the capillary of interest to zero
     
-    % Apply edge detection and set all pixels that are not in the capillary
-    % of interest to zero
-    
-    % FIRST, REMOVE THE BACKGROUND USING THE MAX IMAGE FROM THE ENTIRE
-    % VIDEO
-    % Yeah, I know it's not actually removing it since this "background"
-    % fluctuates but it's a lot better than nothing
-    frame = maxImg - frame;
-    
-    % Canny edge detection to find the borders of the  RBCs
-    % Use canny on the WHOLE FRAME first to avoid weird results, but please
-    % look into why
-    frame = edge(frame, 'canny', 0.26);
-    
+    if strcmp(isEdge, 'notedge')
+        % FIRST, REMOVE THE BACKGROUND USING THE MAX IMAGE FROM THE ENTIRE
+        % VIDEO
+        % Yeah, I know it's not actually removing it since this "background"
+        % fluctuates but it's a lot better than nothing
+        frame = maxImg - frame;
+
+        % Canny edge detection to find the borders of the  RBCs
+        % Use canny on the WHOLE FRAME first to avoid weird results, but please
+        % look into why
+        frame = edge(frame, 'canny', 0.26);
+
+    end
     % Find the indices of the edges in the path
     indices = find(area == id);
     
@@ -31,8 +37,6 @@ function [listROI, circ] = findRBC (frame, area, id, maxImg)
     rect = imcrop(frame, rectCoords);
     area = imcrop(area, rectCoords);
     
-    
-     
     rect(area ~= id) = 0;
     
     % Label all continuous regions

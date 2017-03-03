@@ -20,10 +20,14 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
     for i = 1:numel(fname)
         frame = imread(fname{i});
         
-        %frame = log10(double(maxImg)./double(frame));
-%         filteredFrame = conv2(double(frame), fspecial('log', 12, 16), 'same');
-%         filteredFrame(filteredFrame < 0.5) = 0;
-        [listROI, circ] = findRBC(frame, area, id, maxImg);
+        % FIRST, REMOVE THE BACKGROUND USING THE MAX IMAGE FROM THE ENTIRE
+        % VIDEO
+        % Yeah, I know it's not actually removing it since this "background"
+        % fluctuates but it's a lot better than nothing
+        % This was originally done inside the findRBC function, but was
+        % moved out for efficiency
+        frame = edge(frame - maxImg, 'canny', 0.26);
+        [listROI, circ] = findRBC(frame, area, id);
         fm = zeros(size(listROI, 1), 1);
     
         for j = 1:size(fm, 1)        

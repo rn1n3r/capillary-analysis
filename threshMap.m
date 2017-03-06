@@ -7,7 +7,6 @@ function threshmap = threshMap(fov, area, threshold, disp)
         %stdValues = nanstd(fov{i, 2}, 0, 2);
         %CV = nanstd(fov{i, 2}, 0, 2)./values;
         
-       
         
         [y, x] = ind2sub(size(area), find(area == currentID));
         
@@ -17,15 +16,15 @@ function threshmap = threshMap(fov, area, threshold, disp)
                 area(j, currentRow) = 1;
             else
                 area(j, currentRow) = 0;
+            end
         end
-        
     end
     
     threshmap = area;
-    
+   
     if disp
-        imshow(area, []);
-        colormap(jet);
+        imshow(area);
+        
     end
 
 end

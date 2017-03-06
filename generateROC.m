@@ -6,11 +6,11 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
     % folder
     
     
-    matList = dir([FOVdir '\VesselGeometry\*.mat']);
+    matList = dir([FOVdir '/VesselGeometry/*.mat']);
     counter = 1;
     for i = 1: length(matList)
         if ~isempty(strfind(matList(i).name, '442'))
-            load([FOVdir '\VesselGeometry\' matList(i).name]);
+            load([FOVdir '/VesselGeometry/' matList(i).name]);
             ycoords = Capillary2nd.Coordinates(2) + (1:Capillary2nd.y2(end));
             tempArea = area;
             indices = area == idWithTruthList(counter);
@@ -29,12 +29,12 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
     
     TPF = [];
     FPF = [];
+    nFocusMap(area ~= 1100 & area ~= 600 & area ~= 3100 & area ~= 4100 & area ~= 2100) = 22;
 
     for i = 0:0.5:14
 
         threshmap = threshMap(fov, area, i, false);
-        inFocusMap(area ~= 1100 & area ~= 600 & area ~= 3100 & area ~= 4100 & area ~= 2100) = 22;
-
+        
 
         TPF = [TPF sum(inFocusMap(threshmap == 1) == 1)/sum(sum(inFocusMap == 1))];
         FPF = [FPF sum(noFocusMap(threshmap == 1) == 1)/sum(sum(noFocusMap == 1))];
@@ -51,3 +51,4 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
 end
 
 %[aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 4100 3100], 'C:\Users\Edward\Documents\Files\DUROP\DATA-2\Processed\X20-FOV3-B\')
+%[aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 4100 3100], '/Volumes/DATA-2/Processed/20150619/X20-FOV3-B')

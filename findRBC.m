@@ -9,14 +9,14 @@
 
 function [listROI, circ] = findRBC (frame, area, id, maxImg, isEdge)
     
-    if nargin < 3
-        isEdge = 'edge';
+    if nargin < 4
+        isEdge = true;
     end
 
     % If the isEdge parameter is not given, apply edge detection
     % Set all pixels that are not in the capillary of interest to zero
     
-    if strcmp(isEdge, 'notedge')
+    if ~isEdge
         % FIRST, REMOVE THE BACKGROUND USING THE MAX IMAGE FROM THE ENTIRE
         % VIDEO
         % Yeah, I know it's not actually removing it since this "background"

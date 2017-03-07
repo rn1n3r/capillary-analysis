@@ -25,8 +25,7 @@ function listFM = getPathFmeasures (fname, var, id, fmStr, maxImg)
         % fluctuates but it's a lot better than nothing
         % This was originally done inside the findRBC function, but was
         % moved out for efficiency
-        frame = edge(frame - maxImg, 'canny', 0.26);
-        [listROI, circ] = findRBC(frame, area, id);
+        [listROI, circ] = findRBC(edge(maxImg - frame, 'canny', 0.26), area, id);
         fm = zeros(size(listROI, 1), 1);
     
         for j = 1:size(fm, 1)        

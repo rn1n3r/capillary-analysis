@@ -33,25 +33,25 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
         end
     end
     
-    TPF = [];
-    FPF = [];
+    nThresholds = 20;
+    TPF = zeros(nThresholds, 1);
+    FPF = zeros(nThresholds, 1);
     inFocusMap(area ~= 1100 & area ~= 600 & area ~= 3100 & area ~= 4100 & area ~= 2100) = 22;
     
-    thresholdRange = linspace(0, max(values), 20);
+    thresholdRange = linspace(0, max(values), nThresholds);
     for i = 1:length(thresholdRange)
 
         threshmap = threshMap(fov, area, thresholdRange(i), false);
         
 
-        TPF = [TPF sum(inFocusMap(threshmap == 1) == 1)/sum(sum(inFocusMap == 1))];
-        FPF = [FPF sum(noFocusMap(threshmap == 1) == 1)/sum(sum(noFocusMap == 1))];
+        TPF(i) = sum(inFocusMap(threshmap == 1) == 1)/sum(inFocusMap(:) == 1);
+        FPF(i) = sum(noFocusMap(threshmap == 1) == 1)/sum(noFocusMap(:) == 1);
     end
 
     plot(0:0.1:1, 0:0.1:1);
     hold on;
     plot(FPF, TPF);
-   
-    
+       
 
     aroc = -trapz(FPF, TPF);
    

@@ -12,7 +12,7 @@ else
     %load('..\DATA-2\Processed\X20-FOV3-B\BREN-testMiddle.mat');
     area = getCapillaries(varImg);
     fov = fovData.('X20FOV3B');
-    [aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 4100 3100], 'C:\Users\Edward\Documents\Files\DUROP\DATA-2\Processed\X20-FOV3-B\')
+    [aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 4100 3100], 'C:\Users\Edward\Documents\Files\DUROP\DATA-2\Processed\X20-FOV3-B\');
 end
 
 

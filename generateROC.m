@@ -5,6 +5,12 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
     % Get list of all 442 vessel geometry .mat files from the Processed
     % folder
     
+    values = [];
+    for i = 1:size(fov, 1)
+    
+        values = [values; nanmean(fov{i, 2}, 2)];
+
+    end
     
     matList = dir([FOVdir '/VesselGeometry/*.mat']);
     counter = 1;
@@ -29,11 +35,12 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
     
     TPF = [];
     FPF = [];
-    nFocusMap(area ~= 1100 & area ~= 600 & area ~= 3100 & area ~= 4100 & area ~= 2100) = 22;
+    inFocusMap(area ~= 1100 & area ~= 600 & area ~= 3100 & area ~= 4100 & area ~= 2100) = 22;
+    
+    thresholdRange = linspace(0, max(values), 20);
+    for i = 1:length(thresholdRange)
 
-    for i = 0:0.5:14
-
-        threshmap = threshMap(fov, area, i, false);
+        threshmap = threshMap(fov, area, thresholdRange(i), false);
         
 
         TPF = [TPF sum(inFocusMap(threshmap == 1) == 1)/sum(sum(inFocusMap == 1))];

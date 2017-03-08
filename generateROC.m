@@ -36,7 +36,14 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
     nThresholds = 20;
     TPF = zeros(nThresholds, 1);
     FPF = zeros(nThresholds, 1);
-    inFocusMap(area ~= 1100 & area ~= 600 & area ~= 3100 & area ~= 4100 & area ~= 2100) = 22;
+    
+    % Loop through all the capillary ids and create a mask that represents
+    % the area that is not covered by any of the detected capillaries
+    tempAreaMask = area ~= idWithTruthList(1);
+    for i = 2:length(idWithTruthList)
+        tempAreaMask = tempAreaMask & area ~= idWithTruthList(i);
+    end
+    inFocusMap(tempAreaMask) = 22;
     
     thresholdRange = linspace(0, max(values), nThresholds);
     for i = 1:length(thresholdRange)

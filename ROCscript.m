@@ -1,5 +1,5 @@
 % In focus
-fovName = 'X20-FOV5-B';
+fovName = 'X20-FOV3-B';
 
 
 if isunix
@@ -15,8 +15,8 @@ else
     %load('..\DATA-2\Processed\X20-FOV3-B\BREN-testMiddle.mat');
     area = getCapillaries(varImg);
     fov = fovData.(strrep(fovName, '-', ''));
-    %[aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 3600 3100], 'C:\Users\Edward\Documents\Files\DUROP\DATA-2\Processed\X20-FOV3-B\');
-    [aroc, TPF, FPF] = generateROC(fov, area, [4600 1600 3600 600], 'C:\Users\Edward\Documents\Files\DUROP\DATA-2\Processed\X20-FOV5-B\');
+    [aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 3600 3100], 'C:\Users\Edward\Documents\Files\DUROP\DATA-2\Processed\X20-FOV3-B\');
+    %[aroc, TPF, FPF] = generateROC(fov, area, [4600 1600 3600 600], 'C:\Users\Edward\Documents\Files\DUROP\DATA-2\Processed\X20-FOV5-B\');
 
 end
 

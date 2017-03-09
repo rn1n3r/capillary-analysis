@@ -1,6 +1,7 @@
+% Finds the value within the focus measure histogram which includes around
+% 95% of the entire distribution
 function cutoffVal = findMostValuesHist(values, edges)
 
-   
     target = floor(0.95*sum(values));
     bins = length(values);
     upper = bins;
@@ -9,7 +10,7 @@ function cutoffVal = findMostValuesHist(values, edges)
     for i = 1:bins
         sum(values(1:guess));
 
-        diff = sum(values(1:guess)) - target
+        diff = sum(values(1:guess)) - target;
      
         if diff <= 2 && diff >= -2
             break;
@@ -20,7 +21,7 @@ function cutoffVal = findMostValuesHist(values, edges)
             upper = 0;
             guess = guess - floor((upper - guess/2));
         end
-        guess
+
     end
   
     cutoffVal = edges(guess+1);

@@ -122,10 +122,10 @@ if (isa(a,'logical') || isa(a,'uint8') || isa(a,'uint16'))
 end
 
 % Validate 2D input image
-iptcheckinput(a,{'logical','numeric'},{'2d'},mfilename,'A',1);
+validateattributes(a,{'logical','numeric'},{'2d'},mfilename,'A',1);
 
 % Validate neighborhood
-iptcheckinput(nhood,{'numeric'},{'integer','row','positive','nonnegative','nonzero'},mfilename,'[M N]',blockSizeParamNum);
+validateattributes(nhood,{'numeric'},{'integer','row','positive','nonnegative','nonzero'},mfilename,'[M N]',blockSizeParamNum);
 if (numel(nhood) ~= 2)
     eid = sprintf('Images:%s:invalidBlockSize',mfilename);
     msg = 'Invalid block size, expected [M N].';

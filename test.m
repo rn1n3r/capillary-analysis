@@ -1,7 +1,7 @@
 
 
 %measures = {'GDER'};
-measures = {'BREN'};
+measures = {'VOLA'};
 
 if ispc
     for i = 1:numel(measures)

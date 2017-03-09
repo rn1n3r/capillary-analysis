@@ -33,7 +33,7 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
         end
     end
     
-    nThresholds = 20;
+    nThresholds = 100;
     TPF = zeros(nThresholds, 1);
     FPF = zeros(nThresholds, 1);
     
@@ -45,7 +45,11 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
     end
     inFocusMap(tempAreaMask) = 22;
     
-    thresholdRange = linspace(0, max(values), nThresholds);
+    % Get histogram info
+    [hist, edges] = generateHistogram(fov, true);
+    cutoff = findMostValuesHist(hist, edges)
+    
+    thresholdRange = [linspace(0, cutoff, nThresholds) max(values)];
     for i = 1:length(thresholdRange)
 
         threshmap = threshMap(fov, area, thresholdRange(i), false);
@@ -58,6 +62,7 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
     plot(0:0.1:1, 0:0.1:1);
     hold on;
     plot(FPF, TPF);
+    scatter(FPF, TPF);
        
 
     aroc = -trapz(FPF, TPF);

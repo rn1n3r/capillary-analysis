@@ -1,12 +1,12 @@
 
 
 %measures = {'GDER'};
-measures = {'GLVN'};
+measures = {'BREN'};
 
 if ispc
     for i = 1:numel(measures)
         fovData = getFOVFocusData('../DATA-2/Processed/', {'X20-FOV3-B'}, measures{i});
-        save(['../data/' measures{i} '-GLVN'], 'fovData');
+        save(['../data/' measures{i} '-FOV3-onPC'], 'fovData');
     end
 else
     

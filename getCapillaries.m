@@ -23,7 +23,7 @@ end
 
 % Run markCapillaries, which uses findCapillaries to label all the
 % capillaries
-[capillaries sizeOfEdges] = markCapillaries(capillaries, sizeOfEdges, size(sizeOfEdges, 1));
+[capillaries, sizeOfEdges] = markCapillaries(capillaries, sizeOfEdges, size(sizeOfEdges, 1));
 
 % This loop removes edges that are very small ... from Asher, the minimum
 % length that can be resolved is around 25 microns, and at 0.6 microns /

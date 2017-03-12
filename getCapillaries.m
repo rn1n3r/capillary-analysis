@@ -70,7 +70,10 @@ function [capillaries, sizeOfEdges] = markCapillaries (capillaries, sizeOfEdges,
     for i = 1:numEdges
         
         % Push the zeroed out values in the matrix to the end
-        sizeOfEdges = pushZerosToEnd(sizeOfEdges);
+        tempSizes = zeros(size(sizeOfEdges));
+        idx = find(sizeOfEdges(:,1));
+        tempSizes(1:length(idx), :) = sizeOfEdges(idx, :);
+        sizeOfEdges = tempSizes;
         
         % Break out of the loop if the next edge is length 0 (all
         % capillaries should have been marked)

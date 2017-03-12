@@ -19,7 +19,9 @@ end
 if ispc
     [histo, edges] = histcounts(values, 100);
 else
-    [histo, edges] = hist(values, 100);
+    [histo, centers] = hist(values, 100);
+    d = diff(centers)/2;
+    edges = [centers(1)-d(1), centers(1:end-1)+d, centers(end)+d(end)];
     
 if ~hide
     

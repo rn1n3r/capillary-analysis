@@ -1,7 +1,7 @@
 % analyseFullFOV(fov)
 
 
-function [hist, edges] = generateHistogram (fov, hide)
+function [histo, edges] = generateHistogram (fov, hide)
 if nargin < 2
     hide = false;
 end
@@ -14,7 +14,13 @@ for i = 1:size(fov, 1)
 
     
 end
-[hist, edges] = histcounts(values, 100);
+
+% Use the more updated histcounts function if on PC
+if ispc
+    [histo, edges] = histcounts(values, 100);
+else
+    [histo, edges] = hist(values, 100);
+    
 if ~hide
     
     histogram(values, 100);

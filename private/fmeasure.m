@@ -23,6 +23,7 @@ if nargin>2 && ~isempty(ROI)
 end
 
 WSize = 15; % Size of local window (only some operators)
+warning('off');
 
 switch upper(Measure)
     case 'ACMO' % Absolute Central Moment (Shirvaikar2004)

@@ -6,10 +6,15 @@
 
 function [areaMask, sizeOfEdges] = getCapillaries (variance)
 
+warning('off', 'all');
+
 % Generate edge map
 % For now, use canny_old since I still need to use MATLAB 2010b at the lab
-edges = edge(variance, 'canny_old', 0.2);
-
+if ispc
+    edges = edge(variance, 'canny_old', 0.2);
+else
+    edges = edge(variance, 'canny', 0.2);
+end
 % Label each detected edge and store in "capillaries"
 capillaries = bwlabel(edges);
 

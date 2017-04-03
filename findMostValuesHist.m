@@ -1,9 +1,11 @@
 % Finds the value within the focus measure histogram which includes around
 % 95% of the entire distribution
+% TODO: Somehow fix for VOLA since there are negative values
 function cutoffVal = findMostValuesHist(values, edges)
 
     target = floor(0.95*sum(values));
     bins = length(values);
+    size(values)
     upper = bins;
     guess = floor(bins/2);
 

@@ -3,14 +3,13 @@
 function fov = getFOVfmeasures(measure, var, fname, maxImg)
     
     % Get the capillary IDs in the FOV
-    [~, idList] = getCapillaries(var);
-
+    [area, idList] = getCapillaries(var);
+    
+    % To store all the capillary focus data
     fov = cell(size(idList, 1), 2);
     fov(:, 1) = num2cell(idList(:, 1));
     [fov{:, 2}] = deal(zeros(520, 1260));
    
-    area = getCapillaries(var);
-    
     % This 520 x 1260 x #capillaries matrix is needed to get around the
     % indexing problems from using parfor
     tempMatrix = zeros(520, 1260, size(idList, 1));

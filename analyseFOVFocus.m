@@ -1,6 +1,6 @@
 % Wrapper function for getFOVfmeasures
 % Initializes the max/varImg, and iterate through each fov specified
-function fovData = getFOVFocusData (processedPath, fovList, measure)
+function fovData = analyseFOVFocus (processedPath, fovList, measure)
 
     tic
     

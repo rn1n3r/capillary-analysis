@@ -1,17 +1,32 @@
 % Find the capillaries in the FOV, using edges of the variance image
+% varImg = variance image of video
+% minCirc = minimum number of pixels in edge of capillary
 % areaMask = bwlabelled mask showing where each capillary is
 % sizeOfEdges = matrix with the areas of each capillaries
-% id in column 1, pixels in column 2
-% Currently using canny, at 0.2 threshold (how do I justify this?)
-
-function [areaMask, sizeOfEdges] = getCapillaries (variance, minLength)
+function [areaMask, sizeOfEdges] = getCapillaries (varImg, minCirc, cannyThresh)
 
 warning('off', 'all');
+ 
+
+if nargin == 1
+    
+    % from Asher, the minimum
+    % length that can be resolved is around 25 microns, and at 0.6 microns /
+    % pixel, that works out to around 42 pixels. For the entire circumference,
+    % we approximate by multiplying by 2 ~ 84 pixels
+    minCirc = 84;
+    
+    % Currently using canny, at 0.2 threshold (how do I justify this?)
+    cannyThresh = 0.2
+end
+
+
+
 
 % Generate edge map
 % If this script is run on older versions of MATLAB, the result may be
 % different due to a change in the canny algorithm implementation
-edges = edge(variance, 'canny', 0.2);
+edges = edge(varImg, 'canny', cannyThresh);
 
 % Label each detected edge and store in "capillaries"
 capillaries = bwlabel(edges);
@@ -29,18 +44,9 @@ end
 % capillaries
 [capillaries, sizeOfEdges] = markCapillaries(capillaries, sizeOfEdges, size(sizeOfEdges, 1));
 
-% This loop removes edges that are very small ... from Asher, the minimum
-% length that can be resolved is around 25 microns, and at 0.6 microns /
-% pixel, that works out to around 42 pixels. For the entire circumference,
-% we approximate by multiplying by 2 ~ 84 pixels
-
-if nargin == 1
-    minLength = 84;
-end
-
 % Remove the small edges and set the size to 0 in sizeOfEdges
 for i = 1:size(sizeOfEdges, 1)
-   if sizeOfEdges(i, 2) < minLength
+   if sizeOfEdges(i, 2) < minCirc
        capillaries(capillaries == sizeOfEdges(i, 1)) = 0;
        sizeOfEdges (i,1:2) = 0;
    end    

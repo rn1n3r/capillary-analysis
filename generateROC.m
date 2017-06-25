@@ -59,7 +59,7 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
         FPF(i) = sum(noFocusMap(threshmap == 1) == 1)/sum(noFocusMap(:) == 1);
     end
 
-    plot(0:0.1:1, 0:0.1:1);
+    %plot(0:0.1:1, 0:0.1:1);
     hold on;
     plot(FPF, TPF);
     %scatter(FPF, TPF);

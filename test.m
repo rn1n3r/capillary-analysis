@@ -4,7 +4,7 @@
 % fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 
 %measures = {'GDER'};
-measures = {'CONT'};
+measures = {'BREN'};
 
 if ispc
     for i = 1:numel(measures)

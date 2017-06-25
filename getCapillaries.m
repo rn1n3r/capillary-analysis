@@ -4,17 +4,15 @@
 % id in column 1, pixels in column 2
 % Currently using canny, at 0.2 threshold (how do I justify this?)
 
-function [areaMask, sizeOfEdges] = getCapillaries (variance)
+function [areaMask, sizeOfEdges] = getCapillaries (variance, minLength)
 
 warning('off', 'all');
 
 % Generate edge map
-% For now, use canny_old since I still need to use MATLAB 2010b at the lab
-if ispc
-    edges = edge(variance, 'canny_old', 0.2);
-else
-    edges = edge(variance, 'canny', 0.2);
-end
+% If this script is run on older versions of MATLAB, the result may be
+% different due to a change in the canny algorithm implementation
+edges = edge(variance, 'canny', 0.2);
+
 % Label each detected edge and store in "capillaries"
 capillaries = bwlabel(edges);
 
@@ -33,8 +31,12 @@ end
 
 % This loop removes edges that are very small ... from Asher, the minimum
 % length that can be resolved is around 25 microns, and at 0.6 microns /
-% pixel, that works out to around 42 pixels
-minLength = 84;
+% pixel, that works out to around 42 pixels. For the entire circumference,
+% we approximate by multiplying by 2 ~ 84 pixels
+
+if nargin == 1
+    minLength = 84;
+end
 
 % Remove the small edges and set the size to 0 in sizeOfEdges
 for i = 1:size(sizeOfEdges, 1)
@@ -44,11 +46,12 @@ for i = 1:size(sizeOfEdges, 1)
    end    
 end
 
-
 % Remove edges with 0 length (marked in previous for loop)
 sizeOfEdges = sizeOfEdges(any(sizeOfEdges,2),:);
 
-areaMask = imdilate(capillaries,strel('disk',6));
+% The mask is dilated twice... I don't know why but it works for now, not
+% going to touch it
+areaMask = imdilate(capillaries,strel('disk', 6));
 areaMask = imdilate(areaMask, strel('disk', 3));
 
 end

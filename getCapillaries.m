@@ -17,7 +17,7 @@ if nargin == 1
     minCirc = 84;
     
     % Currently using canny, at 0.2 threshold (how do I justify this?)
-    cannyThresh = 0.2
+    cannyThresh = 0.2;
 end
 
 

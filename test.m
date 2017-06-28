@@ -1,21 +1,14 @@
 
 % % Defaults
-% mainPath = '/Volumes/DATA-2/Captured/20150619/';
-% fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 
-%measures = {'GDER'};
-measures = {'BREN'};
+% This is the path to the "Processed" folder, assuming that there is a
+% corresponding "Captured" folder in the parent directory
+processedFolder = '../DATA-2/Processed/';
+fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 
-if ispc
-    for i = 1:numel(measures)
-        fovData = getFOVFocusData('../DATA-2/Processed/', {'X20-FOV3-B'}, measures{i});
-        save(['../data/' measures{i} '-FOV3-onPC'], 'fovData');
-    end
-else
-    
-    for i = 1:numel(measures)
-        fovData = getFOVFocusData('/Volumes/DATA-2/Processed/20150619/', {'X20-FOV3-B'}, measures{i});
-        save(['../data/' measures{i} '-testNewShouldBeSameAsVanilla'], 'fovData');
-    end 
+measures = {'BREN', 'CONT', 'GDER' };
 
+for i = 1:numel(measures)
+    fovData = analyseFOVFocus('../DATA-2/Processed/', fovList, measures{i});
+    save(['../data/' measures{i} '-06-28'], 'fovData');
 end

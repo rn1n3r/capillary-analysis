@@ -6,7 +6,7 @@
 processedFolder = '../DATA-2/Processed/';
 fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 
-measures = {'BREN', 'CONT', 'GDER' };
+measures = {'TENG', 'TENV', 'VOLA' };
 
 for i = 1:numel(measures)
     fovData = analyseFOVFocus('../DATA-2/Processed/', fovList, measures{i});

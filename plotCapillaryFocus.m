@@ -1,3 +1,6 @@
+% Plots the average focus measure for each y-coordinate in the capillary
+% specified by targetID in the fov
+
 function plotCapillaryFocus(fov, targetID)
 
     % Initialize variables for finding the axes
@@ -21,12 +24,8 @@ function plotCapillaryFocus(fov, targetID)
         end
     end
 
-
-
-    fmean = values;
-
     hold on
-    scatter(1:520, fmean, [], 'b');
+    scatter(1:520, values, [], 'b');
 
     hold off
     axis([1 520 minVal maxVal]);

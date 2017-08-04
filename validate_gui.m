@@ -170,7 +170,6 @@ end
 waitbar(0.75,h);
 set(handles.text1, 'String', [handles.fovName ' loaded']);
 
-freezeColors
 guidata(hObject, handles);
 close(h);
 

@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 03-Aug-2017 23:16:24
+% Last Modified by GUIDE v2.5 04-Aug-2017 00:01:13
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -67,6 +67,8 @@ handles.frameNumber = 1;
 handles.rangeFiltSelected = 0;
 handles.textSelected = 0;
 handles.boxSelected = 0;
+
+handles.validateMode = false; 
 
 % Update handles structure
 guidata(hObject, handles);
@@ -457,3 +459,27 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % Hint: delete(hObject) closes the figure
 uiresume(handles.figure1)
 
+
+% --- Executes on button press in pushbutton5.
+function pushbutton5_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+handles.validateMode = ~handles.validateMode;
+if handles.validateMode
+    set(handles.pushbutton5, 'String', 'Exit Focus Assign');
+else
+    set(handles.pushbutton5, 'String', 'Enter Focus Assign');
+end
+
+guidata(hObject, handles);
+
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over pushbutton5.
+function pushbutton5_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to pushbutton5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

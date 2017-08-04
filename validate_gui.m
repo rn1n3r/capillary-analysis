@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 04-Aug-2017 00:01:13
+% Last Modified by GUIDE v2.5 04-Aug-2017 00:31:29
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -68,8 +68,6 @@ handles.rangeFiltSelected = 0;
 handles.textSelected = 0;
 handles.boxSelected = 0;
 
-handles.validateMode = false; 
-
 % Update handles structure
 guidata(hObject, handles);
 
@@ -88,7 +86,7 @@ function varargout = validate_gui_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 varargout{1} = handles.capArea;
-delete(hObject); % Clean up
+
 
 % --- Executes on button press in load_button.
 function load_button_Callback(hObject, eventdata, handles)
@@ -458,6 +456,7 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % Hint: delete(hObject) closes the figure
 uiresume(handles.figure1)
+delete(hObject); % Clean up
 
 
 % --- Executes on button press in pushbutton5.
@@ -466,12 +465,13 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-handles.validateMode = ~handles.validateMode;
-if handles.validateMode
-    set(handles.pushbutton5, 'String', 'Exit Focus Assign');
-else
-    set(handles.pushbutton5, 'String', 'Enter Focus Assign');
+if isempty(handles.fnames)
+    return;
 end
+
+set(handles.pushbutton5, 'String', 'Enter key to exit!');
+
+ginput(1)
 
 guidata(hObject, handles);
 
@@ -483,3 +483,11 @@ function pushbutton5_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on mouse press over axes background.
+function axes1_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+get(hObject,'CurrentPoint')

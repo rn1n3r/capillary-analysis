@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 04-Aug-2017 00:31:29
+% Last Modified by GUIDE v2.5 04-Aug-2017 09:14:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -76,7 +76,7 @@ handles.focusMask = [];
 guidata(hObject, handles);
 
 % UIWAIT makes validate_gui wait for user response (see UIRESUME)
-uiwait(handles.figure1);
+%uiwait(handles.figure1);
 
 
 
@@ -90,7 +90,7 @@ function varargout = validate_gui_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 varargout{1} = handles.capArea;
-delete(hObject); % Clean up
+%delete(hObject); % Clean up
 
 % --- Executes on button press in load_button.
 function load_button_Callback(hObject, eventdata, handles)
@@ -122,7 +122,11 @@ handles.fovName = path(strfind(path, 'X20'):end-1);
 handles.labelledImageStr = strrep([path 'VesselGeometry/' handles.fovName 'GradientImageLabelled.fig'], '\', '/');
 
 % Show the first frame in axes1
-imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
+hImage = imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
+set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
+
+
+
 
 % Calculate and store the variance image of the frames
 handles.varianceImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName '-16bit442Var.tif'], '\', '/'));
@@ -465,7 +469,8 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: delete(hObject) closes the figure
-uiresume(handles.figure1)
+%uiresume(handles.figure1)
+delete(hObject);
 
 
 
@@ -507,3 +512,19 @@ if handles.validateMode
     
     get(hObject,'CurrentPoint')
 end
+
+function image_ButtonDownFcn(hObject, eventdata)
+handles = guidata(hObject);
+if handles.validateMode
+    hAxes  = get(hObject,'Parent');
+    coordinates = get(hAxes,'CurrentPoint'); 
+    coordinates = coordinates(1,1:2)
+end
+
+
+
+% --- Executes on mouse press over figure background.
+function figure1_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 04-Aug-2017 09:14:24
+% Last Modified by GUIDE v2.5 04-Aug-2017 11:09:12
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -71,7 +71,8 @@ handles.boxSelected = 0;
 % Validate mode unique!
 handles.validateMode = false;
 handles.focusMask = [];
-
+handles.focusColor = [];
+handles.focusColorMode = true;
 % Update handles structure
 guidata(hObject, handles);
 
@@ -137,6 +138,7 @@ handles.maxImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName
 [handles.capArea, handles.idList] = getCapillaries(handles.varianceImage);
 
 handles.focusMask = handles.capArea;
+
 
 % Store location of capillary text labels
 handles.coords = getLabelLocation(handles.capArea, handles.idList);
@@ -376,7 +378,7 @@ function refresh (handles)
 axes(handles.axes1);
 showArea = imread(handles.fnames{handles.frameNumber});
 
-    
+
 if handles.rangeFiltSelected
     showArea = rangefilt(showArea);
     showArea(~handles.area) = 0;
@@ -400,6 +402,35 @@ end
 
 % Add callback function to the image
 set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
+
+if handles.area == handles.capArea
+    if handles.focusColorMode
+        % Calculate focus color mask
+        inFocusArea = find(handles.focusMask == 1337);
+        noFocusArea = find(handles.focusMask == 9001);
+        r = uint8(zeros(size(handles.capArea)));
+        g = uint8(zeros(size(handles.capArea)));
+        b = uint8(zeros(size(handles.capArea)));
+
+        r(inFocusArea) = 124;
+        g(inFocusArea) = 252;
+        b(inFocusArea) = 0;
+        
+        r(noFocusArea) = 252;
+        g(noFocusArea) = 0;
+        b(noFocusArea) = 0;
+        
+        handles.focusColor = cat(3, r, g, b);
+
+        hold on
+        hFocusMask = imshow(handles.focusColor);
+        alphaData = zeros(size(handles.capArea)) + 0.3;
+        alphaData(handles.focusMask ~= 1337 & handles.focusMask ~= 9001) = 0;
+
+        set(hFocusMask, 'AlphaData', alphaData, 'ButtonDownFcn',@image_ButtonDownFcn);
+        hold off
+    end
+end
 
 
 
@@ -521,8 +552,23 @@ handles = guidata(hObject);
 if handles.validateMode
     hAxes  = get(hObject,'Parent');
     coordinates = get(hAxes,'CurrentPoint'); 
-    coordinates = coordinates(1,1:2)
+    coordinates = uint16(coordinates(1,1:2));
+    
+    id = handles.focusMask(coordinates(2), coordinates(1));
+    if id ~= 0
+        id
+        if eventdata.Button == 1
+            handles.focusMask(handles.focusMask == id) = 1337;
+        else
+            handles.focusMask(handles.focusMask == id) = 9001;
+        end
+    end
+    
+    
 end
+
+guidata(hObject, handles);
+refresh(handles);
 
 
 
@@ -531,3 +577,28 @@ function figure1_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in radiobutton12.
+function radiobutton12_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton12
+if get(hObject, 'Value')
+    handles.focusColorMode = true;
+else
+    handles.focusColorMode = false;
+end
+refresh(handles);
+
+
+% --- Executes on button press in pushbutton6.
+function pushbutton6_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+capArea = handles.capArea;
+focusMask = handles.focusMask;
+uisave({'capArea', 'focusMask'}, [handles.fovName '-results']);

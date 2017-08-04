@@ -68,6 +68,10 @@ handles.rangeFiltSelected = 0;
 handles.textSelected = 0;
 handles.boxSelected = 0;
 
+% Validate mode unique!
+handles.validateMode = false;
+handles.focusMask = [];
+
 % Update handles structure
 guidata(hObject, handles);
 
@@ -86,7 +90,7 @@ function varargout = validate_gui_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 varargout{1} = handles.capArea;
-
+delete(hObject); % Clean up
 
 % --- Executes on button press in load_button.
 function load_button_Callback(hObject, eventdata, handles)
@@ -128,6 +132,8 @@ handles.maxImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName
 
 % Store the capillary area mask
 [handles.capArea, handles.idList] = getCapillaries(handles.varianceImage);
+
+handles.focusMask = handles.capArea;
 
 % Store location of capillary text labels
 handles.coords = getLabelLocation(handles.capArea, handles.idList);
@@ -327,7 +333,7 @@ end
 
 if strcmp(get(hObject, 'Tag'), 'var_button')
     imshow(handles.varianceImage, 'Parent', handles.axes2, 'DisplayRange', []);
-else
+elseif strcmp(get(hObject, 'Tag'), 'label_button')
    
     if exist(handles.labelledImageStr, 'file')
         openfig(handles.labelledImageStr, 'new', 'invisible');
@@ -347,7 +353,10 @@ else
             end
         end
     end
-    
+else
+    showArea = imread(handles.fnames{handles.frameNumber});
+    showArea(~handles.capArea) = 0;
+    imshow(showArea, 'Parent', handles.axes2, 'DisplayRange', [0 65536]);
 end
     
 
@@ -385,6 +394,7 @@ if handles.textSelected
         text(handles.coords(i, 2), handles.coords(i, 1), num2str(handles.idList(i, 1)), 'Color', color);
     end
 end
+
 
 
 
@@ -456,7 +466,7 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % Hint: delete(hObject) closes the figure
 uiresume(handles.figure1)
-delete(hObject); % Clean up
+
 
 
 % --- Executes on button press in pushbutton5.
@@ -465,13 +475,16 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if isempty(handles.fnames)
-    return;
+
+handles.validateMode = ~handles.validateMode;
+
+if handles.validateMode
+    set(handles.pushbutton5, 'String', 'Exit Focus Assign');
+else
+    set(handles.pushbutton5, 'String', 'Enter Focus Assign');
 end
 
-set(handles.pushbutton5, 'String', 'Enter key to exit!');
 
-ginput(1)
 
 guidata(hObject, handles);
 
@@ -490,4 +503,7 @@ function axes1_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to axes1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-get(hObject,'CurrentPoint')
+if handles.validateMode
+    
+    get(hObject,'CurrentPoint')
+end

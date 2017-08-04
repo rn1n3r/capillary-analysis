@@ -248,13 +248,6 @@ elseif strcmp(get(hObject, 'Tag'), 'range_button')
     handles.rangeFiltSelected = 1;
     refresh(handles);
     
-elseif strcmp(get(hObject, 'Tag'), 'heatmap_button')
-    %load('bren_norm-BOTH.mat');
-    load('../data/BREN.mat');
-    %imshow(heatMap(fov3, getCapillaries(handles.varianceImage), false), 'Parent', handles.axes1, 'DisplayRange', []);
-    imshow(heatMap(fovData.('X20FOV3B'), getCapillaries(handles.varianceImage), false), 'Parent', handles.axes1, 'DisplayRange', []);
-    colormap(handles.axes1, jet);
-    
 else
     handles.area = ones(520, 696);
     handles.rangeFiltSelected = 0;
@@ -458,15 +451,6 @@ subs = zeros(numel(indices), 2);
 subs = sortrows(subs, 1);
 coords(i, :) = subs(1, :);
 end
-
-
-% --- Executes on button press in heatmap_button.
-function heatmap_button_Callback(hObject, eventdata, handles)
-% hObject    handle to heatmap_button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of heatmap_button
 
 
 % --- Executes during object creation, after setting all properties.

@@ -104,13 +104,10 @@ h = waitbar(0,'Loading..');
 path = strrep(path, 'Captured', 'Processed');
 
 
-if ispc
-    path = strrep(path, '\442', '');
-    path = strrep(path, '\454', '');
-else
-    path = strrep(path, '/442', '');
-    path = strrep(path, '/454', '');
-end
+% Remove wavelength directory string
+path = strrep(path, [filesep '442'], '');
+path = strrep(path, [filesep '454'], '');
+
 
 waitbar(0.25,h);
 

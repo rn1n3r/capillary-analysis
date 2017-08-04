@@ -91,9 +91,14 @@ function load_button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+
+
 % Load the frames specified by the user inputted path
 [fnames, path] = getFnames;
 handles.fnames = fnames;
+
+% Loading bar since it seems to take a while
+h = waitbar(0,'Loading..');
 
 % Get the path string and use it to find the labelled image
 path = strrep(path, 'Captured', 'Processed');
@@ -107,10 +112,9 @@ else
     path = strrep(path, '/454', '');
 end
 
-
+waitbar(0.25,h);
 
 handles.fovName = path(strfind(path, 'X20'):end-1);
-
 handles.labelledImage = strrep([path 'VesselGeometry/' handles.fovName 'GradientImageLabelled.fig'], '\', '/');
 
 % Show the first frame in axes1
@@ -122,13 +126,14 @@ handles.varianceImage = imread(strrep([path 'Functional-16bitImages/' handles.fo
 % Store the max image of the frames
 handles.maxImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName '-16bit442Max.tif'], '\', '/'));
 
-
 % Store the capillary area mask
 [handles.capArea, handles.idList] = getCapillaries(handles.varianceImage);
 
 % Store location of capillary text labels
 handles.coords = getLabelLocation(handles.capArea, handles.idList);
 handles.textHandles = zeros(size(handles.idList, 1));
+
+waitbar(0.50,h);
 
 % Calculate data for labelled image
 
@@ -151,12 +156,13 @@ if exist(handles.labelledImage, 'file')
     end
 end
 
-
+waitbar(0.75,h);
 
 set(handles.text1, 'String', [handles.fovName ' loaded']);
 
 freezeColors
 guidata(hObject, handles);
+close(h);
 
 
 % --- Executes during object creation, after setting all properties.

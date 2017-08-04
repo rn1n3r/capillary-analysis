@@ -369,11 +369,6 @@ if handles.rangeFiltSelected
     showArea(~handles.area) = 0;
     imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', []);
 else
-    
-    if handles.boxSelected
-        showArea = drawRBCrect(showArea, handles.varianceImage, handles.idList, handles.maxImage);
-
-    end
     showArea(~handles.area) = 0;
     imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
 end
@@ -408,23 +403,6 @@ end
 
 refresh(handles);
 guidata(hObject, handles);
-
-% --- Executes on button press in box_button.
-function box_button_Callback(hObject, eventdata, handles)
-% hObject    handle to box_button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of box_button
-if get(hObject, 'Value')
-    handles.boxSelected = 1;
-else
-    handles.boxSelected = 0;
-end
-
-refresh(handles);
-guidata(hObject, handles);
-
 
 % --- Executes on key press with focus on edit1 and none of its controls.
 function edit1_KeyPressFcn(hObject, eventdata, handles)

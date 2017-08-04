@@ -22,7 +22,7 @@ function varargout = frame_gui(varargin)
 
 % Edit the above text to modify the response to help frame_gui
 
-% Last Modified by GUIDE v2.5 02-Sep-2016 10:13:08
+% Last Modified by GUIDE v2.5 03-Aug-2017 21:53:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -153,7 +153,7 @@ end
 
 
 
-
+set(handles.text1, 'String', [handles.fovName ' loaded']);
 
 freezeColors
 guidata(hObject, handles);
@@ -464,3 +464,19 @@ function heatmap_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of heatmap_button
+
+
+% --- Executes during object creation, after setting all properties.
+function text1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% --- Executes on key press with focus on edit1 and none of its controls.
+function slider1_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  structure with the following fields (see UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)

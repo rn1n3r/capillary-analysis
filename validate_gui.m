@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 03-Aug-2017 21:53:23
+% Last Modified by GUIDE v2.5 03-Aug-2017 23:16:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,7 +72,8 @@ handles.boxSelected = 0;
 guidata(hObject, handles);
 
 % UIWAIT makes validate_gui wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
+uiwait(handles.figure1);
+
 
 
 % --- Outputs from this function are returned to the command line.
@@ -83,7 +84,7 @@ function varargout = validate_gui_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
+varargout{1} = 20;
 
 % --- Executes on button press in load_button.
 function load_button_Callback(hObject, eventdata, handles)
@@ -160,6 +161,8 @@ freezeColors
 guidata(hObject, handles);
 close(h);
 
+ginput(4)
+
 
 % --- Executes during object creation, after setting all properties.
 function edit1_CreateFcn(hObject, eventdata, handles)
@@ -221,9 +224,6 @@ refresh(handles);
 guidata(hObject, handles);
 
 
-
-
-
 % --- Executes when selected object is changed in uipanel4.
 function uipanel4_SelectionChangeFcn(hObject, eventdata, handles)
 % hObject    handle to the selected object in uipanel4 
@@ -252,10 +252,6 @@ else
     handles.rangeFiltSelected = 0;
     refresh(handles);
 end
-
-
-    
-
 
 guidata(hObject, handles);
 
@@ -450,3 +446,14 @@ function slider1_KeyPressFcn(hObject, eventdata, handles)
 %	Character: character interpretation of the key(s) that was pressed
 %	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: delete(hObject) closes the figure
+uiresume(handles.figure1)
+delete(hObject);

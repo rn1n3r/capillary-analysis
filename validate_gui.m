@@ -123,10 +123,9 @@ handles.labelledImageStr = strrep([path 'VesselGeometry/' handles.fovName 'Gradi
 
 % Show the first frame in axes1
 hImage = imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
+
+% Add callback function to the image
 set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
-
-
-
 
 % Calculate and store the variance image of the frames
 handles.varianceImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName '-16bit442Var.tif'], '\', '/'));
@@ -381,10 +380,10 @@ showArea = imread(handles.fnames{handles.frameNumber});
 if handles.rangeFiltSelected
     showArea = rangefilt(showArea);
     showArea(~handles.area) = 0;
-    imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', []);
+    hImage = imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', []);
 else
     showArea(~handles.area) = 0;
-    imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
+    hImage = imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
 end
 
 if handles.textSelected
@@ -398,6 +397,10 @@ if handles.textSelected
         text(handles.coords(i, 2), handles.coords(i, 1), num2str(handles.idList(i, 1)), 'Color', color);
     end
 end
+
+% Add callback function to the image
+set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
+
 
 
 

@@ -77,14 +77,16 @@ uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
+% This is actually the last function that runs when you close the gui
+% because of uiresume in closingfcn 
 function varargout = validate_gui_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Get default command line output from handles structure
-varargout{1} = 20;
+varargout{1} = handles.capArea;
+delete(hObject); % Clean up
 
 % --- Executes on button press in load_button.
 function load_button_Callback(hObject, eventdata, handles)
@@ -160,8 +162,6 @@ set(handles.text1, 'String', [handles.fovName ' loaded']);
 freezeColors
 guidata(hObject, handles);
 close(h);
-
-ginput(4)
 
 
 % --- Executes during object creation, after setting all properties.
@@ -456,4 +456,4 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % Hint: delete(hObject) closes the figure
 uiresume(handles.figure1)
-delete(hObject);
+

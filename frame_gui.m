@@ -62,7 +62,7 @@ handles.area = ones(520, 696);
 % Initialize variables
 handles.capArea = [];
 handles.fnames = {};
-handles.labelledImage = [];
+handles.labelledImageStr = [];
 handles.frameNumber = 1;
 handles.rangeFiltSelected = 0;
 handles.textSelected = 0;
@@ -112,7 +112,7 @@ path = strrep(path, [filesep '454'], '');
 waitbar(0.25,h);
 
 handles.fovName = path(strfind(path, 'X20'):end-1);
-handles.labelledImage = strrep([path 'VesselGeometry/' handles.fovName 'GradientImageLabelled.fig'], '\', '/');
+handles.labelledImageStr = strrep([path 'VesselGeometry/' handles.fovName 'GradientImageLabelled.fig'], '\', '/');
 
 % Show the first frame in axes1
 imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
@@ -134,11 +134,12 @@ waitbar(0.50,h);
 
 % Calculate data for labelled image
 
-if exist(handles.labelledImage, 'file')
-    openfig(handles.labelledImage, 'new', 'invisible');
+if exist(handles.labelledImageStr, 'file')
+    openfig(handles.labelledImageStr, 'new', 'invisible');
     myhandle = findall(gcf, 'type', 'image');
-    handles.labelledImage = get(myhandle, 'cdata');
-    imshow(handles.labelledImage, 'Parent', handles.axes2, 'DisplayRange', []);
+    
+    labelledImage = get(myhandle, 'cdata');
+    imshow(labelledImage, 'Parent', handles.axes2, 'DisplayRange', []);
     myhandle = findall(gcf, 'type', 'text');
     handles.position = get(myhandle, 'position');
     handles.textStr = get(myhandle, 'string');
@@ -340,17 +341,23 @@ end
 if strcmp(get(hObject, 'Tag'), 'var_button')
     imshow(handles.varianceImage, 'Parent', handles.axes2, 'DisplayRange', []);
 else
-    if exist(handles.labelledImage, 'file')
-        imshow(handles.labelledImage, 'Parent', handles.axes2, 'DisplayRange', []);
+    if exist(handles.labelledImageStr, 'file')
+        openfig(handles.labelledImageStr, 'new', 'invisible');
+        myhandle = findall(gcf, 'type', 'image');
+        labelledImage = get(myhandle, 'cdata');
+        imshow(labelledImage, 'Parent', handles.axes2, 'DisplayRange', []);
+        myhandle = findall(gcf, 'type', 'text');
+        handles.position = get(myhandle, 'position');
+        handles.textStr = get(myhandle, 'string');
+        delete(gcf);
         axes(handles.axes2);
+
         for i = 1:size(handles.position, 1)
-            cellData = handles.position{i};
+        cellData = handles.position{i};
             if cellData(2) >= 0 && cellData(1) >= 0 && ~strcmp(handles.textStr{i}, 'pixels')
                 text(cellData(1), cellData(2), handles.textStr{i}, 'Color', 'white');
             end
-
         end
-        freezeColors
     end
     
     

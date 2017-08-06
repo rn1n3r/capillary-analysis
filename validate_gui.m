@@ -73,6 +73,9 @@ handles.validateMode = false;
 handles.focusMask = [];
 handles.focusColor = [];
 handles.focusColorMode = true;
+handles.detectedCapSelected = true;
+
+
 % Update handles structure
 guidata(hObject, handles);
 
@@ -128,10 +131,7 @@ handles.fovName = path(strfind(path, 'X20'):end-1);
 handles.labelledImageStr = strrep([path 'VesselGeometry/' handles.fovName 'GradientImageLabelled.fig'], '\', '/');
 
 % Show the first frame in axes1
-hImage = imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
-
-% Add callback function to the image
-set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
+imshow(imread(fnames{1}), 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
 
 % Calculate and store the variance image of the frames
 handles.varianceImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName '-16bit442Var.tif'], '\', '/'));
@@ -152,25 +152,11 @@ handles.textHandles = zeros(size(handles.idList, 1));
 waitbar(0.50,h);
 
 % Calculate data for labelled image
+showArea = imread(handles.fnames{handles.frameNumber});
+showArea(~handles.capArea) = 0;
+hImage = imshow(showArea, 'Parent', handles.axes2, 'DisplayRange', [0 65536]);
+set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
 
-if exist(handles.labelledImageStr, 'file')
-    openfig(handles.labelledImageStr, 'new', 'invisible');
-    myhandle = findall(gcf, 'type', 'image');
-    labelledImage = get(myhandle, 'cdata');
-    imshow(labelledImage, 'Parent', handles.axes2, 'DisplayRange', []);
-    myhandle = findall(gcf, 'type', 'text');
-    handles.position = get(myhandle, 'position');
-    handles.textStr = get(myhandle, 'string');
-    delete(gcf);
-    axes(handles.axes2);
-    
-    for i = 1:size(handles.position, 1)
-    cellData = handles.position{i};
-        if cellData(2) >= 0 && cellData(1) >= 0 && ~strcmp(handles.textStr{i}, 'pixels')
-            text(cellData(1), cellData(2), handles.textStr{i}, 'Color', 'white');
-        end
-    end
-end
 
 waitbar(0.75,h);
 set(handles.text1, 'String', [handles.fovName ' loaded']);
@@ -341,14 +327,17 @@ if isempty(handles.fnames)
 end
 
 if strcmp(get(hObject, 'Tag'), 'var_button')
-    imshow(handles.varianceImage, 'Parent', handles.axes2, 'DisplayRange', []);
+    hImage = imshow(handles.varianceImage, 'Parent', handles.axes2, 'DisplayRange', []);
+    handles.detectedCapSelected = false;
+    % Add callback function to the image
+    set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
 elseif strcmp(get(hObject, 'Tag'), 'label_button')
-   
+    handles.detectedCapSelected = false;
     if exist(handles.labelledImageStr, 'file')
         openfig(handles.labelledImageStr, 'new', 'invisible');
         myhandle = findall(gcf, 'type', 'image');
         labelledImage = get(myhandle, 'cdata');
-        imshow(labelledImage, 'Parent', handles.axes2, 'DisplayRange', []);
+        hImage = imshow(labelledImage, 'Parent', handles.axes2, 'DisplayRange', []);
         myhandle = findall(gcf, 'type', 'text');
         handles.position = get(myhandle, 'position');
         handles.textStr = get(myhandle, 'string');
@@ -362,11 +351,16 @@ elseif strcmp(get(hObject, 'Tag'), 'label_button')
             end
         end
     end
+    % Add callback function to the image
+    set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
 else
-    showArea = imread(handles.fnames{handles.frameNumber});
-    showArea(~handles.capArea) = 0;
-    imshow(showArea, 'Parent', handles.axes2, 'DisplayRange', [0 65536]);
+    handles.detectedCapSelected = true;
+    refresh(handles);
 end
+
+
+guidata(hObject, handles);
+
     
 
 
@@ -386,10 +380,10 @@ showArea = imread(handles.fnames{handles.frameNumber});
 if handles.rangeFiltSelected
     showArea = rangefilt(showArea);
     showArea(~handles.area) = 0;
-    hImage = imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', []);
+    imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', []);
 else
     showArea(~handles.area) = 0;
-    hImage = imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
+    imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
 end
 
 if handles.textSelected
@@ -402,12 +396,17 @@ if handles.textSelected
     for i = 1:size(handles.idList, 1)
         text(handles.coords(i, 2), handles.coords(i, 1), num2str(handles.idList(i, 1)), 'Color', color);
     end
+    
 end
 
-% Add callback function to the image
-set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
 
-if handles.area == handles.capArea
+% Refresh frame for axes2 if it is in detected capillary mode
+if handles.detectedCapSelected
+    axes(handles.axes2);
+    showArea = imread(handles.fnames{handles.frameNumber});
+    showArea(~handles.capArea) = 0;
+    hImage = imshow(showArea, 'Parent', handles.axes2, 'DisplayRange', [0 65536]);
+    set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
     if handles.focusColorMode
         % Calculate focus color mask
         inFocusArea = find(handles.focusMask == 1337);
@@ -434,11 +433,8 @@ if handles.area == handles.capArea
         set(hFocusMask, 'AlphaData', alphaData, 'ButtonDownFcn',@image_ButtonDownFcn);
         hold off
     end
+    
 end
-
-
-
-
 
 
 % --- Executes on button press in labelbutton.

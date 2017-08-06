@@ -22,6 +22,7 @@ function [fnames, path] = getFnames (varargin)
     end
 
     % Find the path
+    % Opens in current directory if defaultPath is not valid
     if isempty(path)
         path = uigetdir(defaultPath);
     end
@@ -59,6 +60,5 @@ function [fnames, path] = getFnames (varargin)
     for i = 1:size(tempNames, 1)
         fnames{i} = strcat(path, tempNames(i).name);
     end
-
 
 end

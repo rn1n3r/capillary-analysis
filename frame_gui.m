@@ -94,7 +94,12 @@ function load_button_Callback(hObject, eventdata, handles)
 
 
 % Load the frames specified by the user inputted path
-[fnames, path] = getFnames;
+try
+    [fnames, path] = getFnames;
+catch ME
+    return
+end
+
 handles.fnames = fnames;
 
 % Loading bar since it seems to take a while

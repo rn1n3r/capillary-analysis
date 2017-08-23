@@ -1,29 +1,34 @@
-function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
+% Function to generate ROC based off of the focus labels in the ORIGINAL
+% DATA
+% Uses the VesselGeometry directory of processed data for the FOV 
+% idWithTruthList is the list capillary IDs with a corresponding capillary
+% in the VesselGeometry data -- this needs to be in the same alphabetical
+% order!!!
 
+function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProcesseddir)
+    
+    % Initialize variables for the marked focus/not in focus maps
     inFocusMap = zeros(520, 696);
     noFocusMap = inFocusMap;
+    
+    
     % Get list of all 442 vessel geometry .mat files from the Processed
     % folder
-    
-    values = [];
-    for i = 1:size(fov, 1)
-    
-        values = [values; nanmean(fov{i, 2}, 2)];
-
-    end
-    
-    matList = dir([FOVdir '/VesselGeometry/*.mat']);
+    matList = dir([FOVProcesseddir '/VesselGeometry/*.mat']);
+    matList = {matList.name};
     counter = 1;
     for i = 1: length(matList)
-        if ~isempty(strfind(matList(i).name, '442'))
-            load([FOVdir '/VesselGeometry/' matList(i).name]);
+        if ~isempty(strfind(matList{i}, '442'))
+            % Load the vessel geometry file and get the ycoordinates
+            load([FOVProcesseddir '/VesselGeometry/' matList{i}]);
             ycoords = Capillary2nd.Coordinates(2) + (1:Capillary2nd.y2(end));
-            tempArea = area;
-            indices = area == idWithTruthList(counter);
+            
+            tempArea = capMask;
+            indices = capMask == idWithTruthList(counter);
             tempArea(ycoords, :) = 1;
             
             % In focus capillaries
-            if isempty(strfind(matList(i).name, 'anif')) && isempty(strfind(matList(i).name, 'agmf'))
+            if isempty(strfind(matList(i), 'anif')) && isempty(strfind(matList(i), 'agmf'))
                 inFocusMap(indices & tempArea == 1) = 1;
               
             else
@@ -33,41 +38,46 @@ function [aroc, TPF, FPF] = generateROC(fov, area, idWithTruthList, FOVdir)
         end
     end
     
-    nThresholds = 20;
+    nThresholds = 300;
     TPF = zeros(nThresholds, 1);
     FPF = zeros(nThresholds, 1);
     
     % Loop through all the capillary ids and create a mask that represents
     % the area that is not covered by any of the detected capillaries
-    tempAreaMask = area ~= idWithTruthList(1);
+    tempAreaMask = capMask ~= idWithTruthList(1);
     for i = 2:length(idWithTruthList)
-        tempAreaMask = tempAreaMask & area ~= idWithTruthList(i);
+        tempAreaMask = tempAreaMask & capMask ~= idWithTruthList(i);
     end
     inFocusMap(tempAreaMask) = 22;
     
     % Get histogram info
     [hist, edges] = generateHistogram(fov, true);
-    cutoff = findMostValuesHist(hist, edges)
+    cutoff = findMostValuesHist(hist, edges);
     
-    thresholdRange = [linspace(0, cutoff, nThresholds) max(values)];
+    
+    
+    meanValues = zeros(520, length(fov));
+    for i = 1:length(fov)
+       meanValues(:, i) = nanmean(fov{i,2},2); 
+    end
+    
+    
+    thresholdRange = linspace(0, max(meanValues(:)), nThresholds);
     for i = 1:length(thresholdRange)
 
-        threshmap = threshMap(fov, area, thresholdRange(i), false);
+        threshmap = threshMap(fov, meanValues, capMask, thresholdRange(i), false);
         
-
         TPF(i) = sum(inFocusMap(threshmap == 1) == 1)/sum(inFocusMap(:) == 1);
         FPF(i) = sum(noFocusMap(threshmap == 1) == 1)/sum(noFocusMap(:) == 1);
     end
 
     %plot(0:0.1:1, 0:0.1:1);
     hold on;
-    plot(FPF, TPF);
-    %scatter(FPF, TPF);
+    %plot(FPF, TPF);
+    scatter(FPF, TPF);
        
 
     aroc = -trapz(FPF, TPF);
    
 end
 
-%[aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 4100 3100], 'C:\Users\Edward\Documents\Files\DUROP\DATA-2\Processed\X20-FOV3-B\')
-%[aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 4100 3100], '/Volumes/DATA-2/Processed/20150619/X20-FOV3-B')

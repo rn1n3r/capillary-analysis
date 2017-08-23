@@ -3,7 +3,7 @@
 % Uses the VesselGeometry directory of processed data for the FOV 
 % idWithTruthList is the list capillary IDs with a corresponding capillary
 % in the VesselGeometry data -- this needs to be in the same alphabetical
-% order!!!
+% or
 
 function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProcesseddir)
     
@@ -28,7 +28,7 @@ function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProces
             tempArea(ycoords, :) = 1;
             
             % In focus capillaries
-            if isempty(strfind(matList(i), 'anif')) && isempty(strfind(matList(i), 'agmf'))
+            if isempty(strfind(matList{i}, 'anif')) && isempty(strfind(matList{i}, 'agmf'))
                 inFocusMap(indices & tempArea == 1) = 1;
               
             else
@@ -38,7 +38,7 @@ function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProces
         end
     end
     
-    nThresholds = 300;
+    nThresholds = 20;
     TPF = zeros(nThresholds, 1);
     FPF = zeros(nThresholds, 1);
     
@@ -62,7 +62,7 @@ function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProces
     end
     
     
-    thresholdRange = linspace(0, max(meanValues(:)), nThresholds);
+    thresholdRange = [linspace(0, cutoff, nThresholds) max(meanValues(:))];
     for i = 1:length(thresholdRange)
 
         threshmap = threshMap(fov, meanValues, capMask, thresholdRange(i), false);
@@ -73,11 +73,10 @@ function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProces
 
     %plot(0:0.1:1, 0:0.1:1);
     hold on;
-    %plot(FPF, TPF);
-    scatter(FPF, TPF);
+    plot(FPF, TPF);
+    %scatter(FPF, TPF);
        
 
     aroc = -trapz(FPF, TPF);
    
 end
-

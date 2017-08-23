@@ -23,16 +23,16 @@ function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProces
             load([FOVProcesseddir '/VesselGeometry/' matList{i}]);
             ycoords = Capillary2nd.Coordinates(2) + (1:Capillary2nd.y2(end));
             
-            tempArea = capMask;
-            indices = capMask == idWithTruthList(counter);
-            tempArea(ycoords, :) = 1;
+            % Create mask of only the intersection of the vessel geometry
+            % area and the detected capillary area
+            tempArea = false(520,696);
+            tempArea(ycoords,:) = capMask(ycoords,:) == idWithTruthList(counter);
             
-            % In focus capillaries
+            % Mark this area as in-focus or not in focus
             if isempty(strfind(matList{i}, 'anif')) && isempty(strfind(matList{i}, 'agmf'))
-                inFocusMap(indices & tempArea == 1) = 1;
-              
+                inFocusMap(tempArea) = 1;
             else
-                noFocusMap(indices & tempArea == 1  & ~inFocusMap) = 1;
+                noFocusMap(tempArea & ~inFocusMap) = 1;
             end
             counter = counter + 1;
         end
@@ -71,11 +71,9 @@ function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProces
         FPF(i) = sum(noFocusMap(threshmap == 1) == 1)/sum(noFocusMap(:) == 1);
     end
 
-    %plot(0:0.1:1, 0:0.1:1);
     hold on;
     plot(FPF, TPF);
-    %scatter(FPF, TPF);
-       
+
 
     aroc = -trapz(FPF, TPF);
    

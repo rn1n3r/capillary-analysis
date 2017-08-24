@@ -38,7 +38,7 @@ function [aroc, TPF, FPF] = generateROC(fov, capMask, idWithTruthList, FOVProces
         end
     end
     
-    nThresholds = 20;
+    nThresholds = 200;
     TPF = zeros(nThresholds, 1);
     FPF = zeros(nThresholds, 1);
     

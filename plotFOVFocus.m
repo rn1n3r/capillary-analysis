@@ -93,7 +93,8 @@ function plotFOVFocus(fov, varargin)
         end
 
         hold on
-        scatter(1:520, fmean, [], 'b');
+        plot(fmean);
+        %scatter(1:520, fmean, [], 'b');
         scatter(1:520, nanstd(fov{i ,2}, 0, 2), [], [0.5 0.5 0.5]);
         hold off
         axis([1 520 minVal maxVal]);

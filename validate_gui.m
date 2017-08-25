@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 04-Aug-2017 11:09:12
+% Last Modified by GUIDE v2.5 24-Aug-2017 22:43:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -602,3 +602,38 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 capArea = handles.capArea;
 focusMask = handles.focusMask;
 uisave({'capArea', 'focusMask'}, [handles.fovName '-results']);
+
+
+% --- Executes on button press in pushbutton7.
+function pushbutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if strcmp(hObject.String, 'Play')
+    hObject.String = 'Pause';
+else
+    hObject.String = 'Play'; 
+end
+
+
+
+axes(handles.axes1);
+while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.fnames)
+    showArea = imread(handles.fnames{handles.frameNumber});
+    showArea(~handles.area) = 0;
+    imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
+    
+    if handles.frameNumber ~= length(handles.fnames)
+        handles.frameNumber = handles.frameNumber + 1;
+    end
+    
+    % Set the editable text value
+    set(handles.edit1, 'String', handles.frameNumber);
+    guidata(hObject, handles);
+    pause(0.01);
+    
+end
+
+
+

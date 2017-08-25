@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 24-Aug-2017 22:43:22
+% Last Modified by GUIDE v2.5 25-Aug-2017 00:07:48
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -480,22 +480,6 @@ coords(i, :) = subs(1, :);
 end
 
 
-% --- Executes during object creation, after setting all properties.
-function text1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to text1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% --- Executes on key press with focus on edit1 and none of its controls.
-function slider1_KeyPressFcn(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  structure with the following fields (see UICONTROL)
-%	Key: name of the key that was pressed, in lower case
-%	Character: character interpretation of the key(s) that was pressed
-%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
-% handles    structure with handles and user data (see GUIDATA)
-
-
 % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
@@ -505,7 +489,6 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % Hint: delete(hObject) closes the figure
 %uiresume(handles.figure1)
 delete(hObject);
-
 
 
 % --- Executes on button press in pushbutton5.
@@ -527,14 +510,6 @@ end
 
 guidata(hObject, handles);
 
-
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over pushbutton5.
-function pushbutton5_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to pushbutton5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes on mouse press over axes background.
@@ -569,15 +544,6 @@ end
 
 guidata(hObject, handles);
 refresh(handles);
-
-
-
-% --- Executes on mouse press over figure background.
-function figure1_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to figure1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 
 % --- Executes on button press in radiobutton12.
 function radiobutton12_Callback(hObject, eventdata, handles)
@@ -634,6 +600,3 @@ while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.f
     pause(0.01);
     
 end
-
-
-

@@ -1,5 +1,5 @@
 % In focus
-fovName = 'X20-FOV3-B';
+fovName = 'X20-FOV5-B';
 
 
 if isunix

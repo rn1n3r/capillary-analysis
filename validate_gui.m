@@ -142,7 +142,7 @@ handles.maxImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName
 % Store the capillary area mask
 [handles.capArea, handles.idList] = getCapillaries(handles.varianceImage);
 
-handles.focusMask = handles.capArea;
+handles.focusMask = zeros(size(handles.capArea));
 
 
 % Store location of capillary text labels
@@ -529,13 +529,18 @@ if handles.validateMode
     coordinates = get(hAxes,'CurrentPoint'); 
     coordinates = uint16(coordinates(1,1:2));
     
-    id = handles.focusMask(coordinates(2), coordinates(1));
+    id = handles.capArea(coordinates(2), coordinates(1));
     if id ~= 0
         id
-        if eventdata.Button == 1
-            handles.focusMask(handles.focusMask == id) = 1337;
+        selectedCap = handles.focusMask(handles.capArea == id);
+        if selectedCap(1) ~= 0
+            handles.focusMask(handles.capArea == id) = 0;
         else
-            handles.focusMask(handles.focusMask == id) = 9001;
+            if eventdata.Button == 1
+                handles.focusMask(handles.capArea == id) = 1337;
+            else
+                handles.focusMask(handles.capArea == id) = 9001;
+            end
         end
     end
     
@@ -597,6 +602,6 @@ while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.f
     % Set the editable text value
     set(handles.edit1, 'String', handles.frameNumber);
     guidata(hObject, handles);
-    pause(0.01);
+    pause(0.05);
     
 end

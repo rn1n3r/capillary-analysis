@@ -26,7 +26,9 @@ function plotCapillaryFocus(fov, targetID)
 
     hold on
     scatter(1:520, values, [], 'b');
-
+    CV = nanstd(fov{i ,2}, 0, 2)./values;
+    scatter(1:520, CV , [], 'r');
+    
     hold off
     axis([1 520 minVal maxVal]);
     title(num2str(fov{index, 1}));

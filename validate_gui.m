@@ -63,6 +63,7 @@ handles.area = ones(520, 696);
 handles.labelledImageStr = [];
 handles.capArea = [];
 handles.fnames = {};
+handles.fnamesOther = {}; % For the other wavelength
 handles.frameNumber = 1;
 handles.rangeFiltSelected = 0;
 handles.textSelected = 0;
@@ -112,6 +113,7 @@ catch ME
 end
 
 handles.fnames = fnames;
+handles.fnamesOther = strrep(fnames, '442', '454');
 
 % Loading bar since it seems to take a while
 h = waitbar(0,'Loading..');

@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 25-Aug-2017 00:07:48
+% Last Modified by GUIDE v2.5 24-Oct-2017 11:38:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -71,6 +71,7 @@ handles.boxSelected = 0;
 
 % Validate mode unique!
 handles.validateMode = false;
+handles.dividerMode = false; % For adding dividers in validate mode
 handles.focusMask = [];
 handles.focusColor = [];
 handles.focusColorMode = true;
@@ -607,3 +608,19 @@ while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.f
     pause(0.05);
     
 end
+
+
+% --- Executes on button press in dividebutton.
+function dividebutton_Callback(hObject, eventdata, handles)
+% hObject    handle to dividebutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if ~handles.dividerMode
+    handles.dividerMode = true;
+    hObject.String = 'Exit Divider Mode';
+else
+    handles.dividerMode = false;
+    hObject.String = 'Enter Divider Mode';
+end
+    
+guidata(hObject, handles);

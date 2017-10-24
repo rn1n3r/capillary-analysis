@@ -547,11 +547,11 @@ if handles.validateMode
         end
     end
     
-    
+    guidata(hObject, handles);
+    refresh(handles);
+
 end
 
-guidata(hObject, handles);
-refresh(handles);
 
 % --- Executes on button press in radiobutton12.
 function radiobutton12_Callback(hObject, eventdata, handles)
@@ -618,6 +618,8 @@ function dividebutton_Callback(hObject, eventdata, handles)
 if ~handles.dividerMode
     handles.dividerMode = true;
     hObject.String = 'Exit Divider Mode';
+    axes(handles.axes2);
+    h = impoint();
 else
     handles.dividerMode = false;
     hObject.String = 'Enter Divider Mode';

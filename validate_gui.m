@@ -605,7 +605,7 @@ while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.f
     % Set the editable text value
     set(handles.edit1, 'String', handles.frameNumber);
     guidata(hObject, handles);
-    pause(0.05);
+    pause(0.025);
     
 end
 
@@ -615,14 +615,10 @@ function dividebutton_Callback(hObject, eventdata, handles)
 % hObject    handle to dividebutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-if ~handles.dividerMode
-    handles.dividerMode = true;
-    hObject.String = 'Exit Divider Mode';
-    axes(handles.axes2);
-    h = impoint();
-else
-    handles.dividerMode = false;
-    hObject.String = 'Enter Divider Mode';
-end
+
+axes(handles.axes2);
+h = impoint();
+fprintf('Hi!');
+
     
 guidata(hObject, handles);

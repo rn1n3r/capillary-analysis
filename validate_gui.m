@@ -447,7 +447,7 @@ if handles.detectedCapSelected
     
 end
 
-pointMoved = @(pos) impointCallback (pos, handles);
+pointMoved = @(pos) impointCallback (pos, hObject, handles);
 
 % Refresh impoints
 if handles.dividerPoints > 0
@@ -637,7 +637,7 @@ function dividebutton_Callback(hObject, eventdata, handles)
 axes(handles.axes2);
 handles.impointArray(handles.dividerPoints + 1) = impoint();
 
-pointMoved = @(pos) impointCallback (pos, handles);
+pointMoved = @(pos) impointCallback (pos, hObject, handles);
 
 addNewPositionCallback(handles.impointArray(handles.dividerPoints + 1), pointMoved);
 
@@ -645,15 +645,13 @@ handles.dividerPositionPos(handles.dividerPoints + 1, :) = getPosition(handles.i
 handles.dividerPoints = handles.dividerPoints + 1;
 
 
-fprintf('Hi!');
-
-    
 guidata(hObject, handles);
 
 
-function impointCallback (coords, handles)
+function impointCallback (coords, hObject, handles)
 coords = round(coords);
 handles.capArea(coords(2), coords(1))
+guidata(hObject, handles);
 
 
 

@@ -72,6 +72,7 @@ handles.boxSelected = 0;
 handles.impointArray = impoint(gca, 0, 0);
 handles.impointArray.setColor('w');
 handles.dividerPoints = 0;
+handles.dividerPositionPos = zeros(1,2);
 
 % Validate mode unique!
 handles.validateMode = false;
@@ -249,17 +250,17 @@ if isempty(handles.fnames)
 elseif strcmp(get(hObject, 'Tag'), 'capillary_button')
     handles.area = handles.capArea;
     handles.rangeFiltSelected = 0;
-    refresh( handles);
+    handles = refresh( handles);
     
 elseif strcmp(get(hObject, 'Tag'), 'range_button')
     handles.area = handles.capArea;
     handles.rangeFiltSelected = 1;
-    refresh( handles);
+    handles = refresh(handles);
     
 else
     handles.area = ones(520, 696);
     handles.rangeFiltSelected = 0;
-    refresh( handles);
+    handles = refresh(handles);
 end
 
 guidata(hObject, handles);
@@ -363,7 +364,7 @@ elseif strcmp(get(hObject, 'Tag'), 'label_button')
     set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
 else
     handles.detectedCapSelected = true;
-    refresh( handles);
+    handles = refresh(handles);
 end
 
 
@@ -382,12 +383,6 @@ function axes1_CreateFcn(hObject, eventdata, handles)
 
 function handles = refresh (handles)
 
-% Store the location of the divider points
-if handles.dividerPoints > 0
-    for i=1:handles.dividerPoints
-        dividerPositionPos(i,:) = getPosition(handles.impointArray(i));
-    end
-end
 
 axes(handles.axes1);
 showArea = imread(handles.fnames{handles.frameNumber});
@@ -457,7 +452,7 @@ pointMoved = @(pos) impointCallback (pos, handles);
 % Refresh impoints
 if handles.dividerPoints > 0
     for i=1:handles.dividerPoints
-        handles.impointArray(i) = impoint(gca, dividerPositionPos(i,:));
+        handles.impointArray(i) = impoint(gca, handles.dividerPositionPos(i,:));
         addNewPositionCallback(handles.impointArray(i), pointMoved);
         fprintf('redrawing\n');
     end
@@ -645,7 +640,11 @@ handles.impointArray(handles.dividerPoints + 1) = impoint();
 pointMoved = @(pos) impointCallback (pos, handles);
 
 addNewPositionCallback(handles.impointArray(handles.dividerPoints + 1), pointMoved);
+
+handles.dividerPositionPos(handles.dividerPoints + 1, :) = getPosition(handles.impointArray(handles.dividerPoints + 1));
 handles.dividerPoints = handles.dividerPoints + 1;
+
+
 fprintf('Hi!');
 
     

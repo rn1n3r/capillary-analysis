@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 24-Oct-2017 11:38:02
+% Last Modified by GUIDE v2.5 16-Nov-2017 19:29:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -63,7 +63,8 @@ handles.area = ones(520, 696);
 handles.labelledImageStr = [];
 handles.capArea = [];
 handles.fnames = {};
-handles.fnamesOther = {}; % For the other wavelength
+handles.fnames442 = {};
+handles.fnames454 = {};
 handles.frameNumber = 1;
 handles.rangeFiltSelected = 0;
 handles.textSelected = 0;
@@ -114,7 +115,8 @@ catch ME
 end
 
 handles.fnames = fnames;
-handles.fnamesOther = strrep(fnames, '442', '454');
+handles.fnames442 = fnames;
+handles.fnames454 = strrep(fnames, '442', '454');
 
 % Loading bar since it seems to take a while
 h = waitbar(0,'Loading..');
@@ -590,8 +592,6 @@ else
     hObject.String = 'Play'; 
 end
 
-
-
 axes(handles.axes1);
 while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.fnames)
     showArea = imread(handles.fnames{handles.frameNumber});
@@ -622,3 +622,41 @@ fprintf('Hi!');
 
     
 guidata(hObject, handles);
+
+
+% --- Executes on button press in button442.
+function button442_Callback(hObject, eventdata, handles)
+% hObject    handle to button442 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button442
+
+
+% --- Executes on button press in button454.
+function button454_Callback(hObject, eventdata, handles)
+% hObject    handle to button454 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button454
+
+
+% --- Executes when selected object is changed in wavelengthPanel.
+function wavelengthPanel_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in wavelengthPanel 
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if isempty(handles.fnames)
+    return;
+end
+
+if strcmp(get(hObject, 'Tag'), 'button442')
+    handles.fnames = handles.fnames442;
+else
+    handles.fnames = handles.fnames454;
+end
+
+refresh(handles);
+guidata(hObject, handles);
+

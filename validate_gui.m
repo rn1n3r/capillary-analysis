@@ -204,7 +204,7 @@ handles.frameNumber = uint8(str2double(get(hObject, 'String')));
 set(handles.slider1, 'Value', str2double(get(hObject, 'String')));
 
 % Show the current frame / area
-refresh( handles);
+refresh(hObject, handles);
 guidata(hObject, handles);
 
 
@@ -229,7 +229,7 @@ handles.frameNumber = uint16(get(hObject, 'Value'));
 % Set the editable text value
 set(handles.edit1, 'String', handles.frameNumber);
 
-refresh( handles);
+refresh(hObject, handles);
 
 guidata(hObject, handles);
 
@@ -250,17 +250,17 @@ if isempty(handles.fnames)
 elseif strcmp(get(hObject, 'Tag'), 'capillary_button')
     handles.area = handles.capArea;
     handles.rangeFiltSelected = 0;
-    handles = refresh( handles);
+    handles = refresh(hObject, handles);
     
 elseif strcmp(get(hObject, 'Tag'), 'range_button')
     handles.area = handles.capArea;
     handles.rangeFiltSelected = 1;
-    handles = refresh(handles);
+    handles = refresh(hObject, handles);
     
 else
     handles.area = ones(520, 696);
     handles.rangeFiltSelected = 0;
-    handles = refresh(handles);
+    handles = refresh(hObject, handles);
 end
 
 guidata(hObject, handles);
@@ -301,7 +301,7 @@ switch eventdata.Key
             set(handles.slider1, 'Value', str2double(get(handles.edit1, 'String')) + 1);
             set(handles.edit1, 'String', str2double(get(handles.edit1, 'String')) + 1);
             handles.frameNumber = handles.frameNumber + 1;
-            refresh( handles);
+            refresh(hObject, handles);
         end
         
     case 'leftarrow'
@@ -309,7 +309,7 @@ switch eventdata.Key
             set(handles.slider1, 'Value', str2double(get(handles.edit1, 'String')) - 1);
             set(handles.edit1, 'String', str2double(get(handles.edit1, 'String')) - 1);
             handles.frameNumber = handles.frameNumber - 1;
-            refresh( handles);
+            refresh(hObject, handles);
         end
     
     otherwise
@@ -364,7 +364,7 @@ elseif strcmp(get(hObject, 'Tag'), 'label_button')
     set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
 else
     handles.detectedCapSelected = true;
-    handles = refresh(handles);
+    handles = refresh(hObject, handles);
 end
 
 
@@ -381,7 +381,7 @@ function axes1_CreateFcn(hObject, eventdata, handles)
 
 % Hint: place code in OpeningFcn to populate axes1
 
-function handles = refresh (handles)
+function handles = refresh (hObject, handles)
 
 
 axes(handles.axes1);
@@ -447,12 +447,13 @@ if handles.detectedCapSelected
     
 end
 
-pointMoved = @(pos) impointCallback (pos, hObject, handles);
+
 
 % Refresh impoints
 if handles.dividerPoints > 0
     for i=1:handles.dividerPoints
         handles.impointArray(i) = impoint(gca, handles.dividerPositionPos(i,:));
+        pointMoved = @(pos) impointCallback (pos, hObject, handles, i);
         addNewPositionCallback(handles.impointArray(i), pointMoved);
         fprintf('redrawing\n');
     end
@@ -473,7 +474,7 @@ else
     handles.textSelected = 0;
 end
 
-refresh( handles);
+refresh(hObject, handles);
 guidata(hObject, handles);
 
 % --- Executes on key press with focus on edit1 and none of its controls.
@@ -568,7 +569,7 @@ if handles.validateMode
     end
     
     guidata(hObject, handles);
-    refresh( handles);
+    refresh(hObject, handles);
 
 end
 
@@ -585,7 +586,7 @@ if get(hObject, 'Value')
 else
     handles.focusColorMode = false;
 end
-refresh( handles);
+refresh(hObject, handles);
 
 
 % --- Executes on button press in pushbutton6.
@@ -636,21 +637,22 @@ function dividebutton_Callback(hObject, eventdata, handles)
 
 axes(handles.axes2);
 handles.impointArray(handles.dividerPoints + 1) = impoint();
-
-pointMoved = @(pos) impointCallback (pos, hObject, handles);
+id = handles.dividerPoints + 1;
+pointMoved = @(pos) impointCallback (pos, hObject, handles, id);
 
 addNewPositionCallback(handles.impointArray(handles.dividerPoints + 1), pointMoved);
 
 handles.dividerPositionPos(handles.dividerPoints + 1, :) = getPosition(handles.impointArray(handles.dividerPoints + 1));
 handles.dividerPoints = handles.dividerPoints + 1;
 
-
 guidata(hObject, handles);
 
 
-function impointCallback (coords, hObject, handles)
+function impointCallback (coords, hObject, handles, id)
+id
 coords = round(coords);
 handles.capArea(coords(2), coords(1))
+handles.dividerPositionPos(id, :) = coords;
 guidata(hObject, handles);
 
 
@@ -689,6 +691,6 @@ else
     handles.fnames = handles.fnames454;
 end
 
-handles = refresh(handles);
+handles = refresh(hObject, handles);
 guidata(hObject, handles);
 

@@ -69,6 +69,9 @@ handles.frameNumber = 1;
 handles.rangeFiltSelected = 0;
 handles.textSelected = 0;
 handles.boxSelected = 0;
+handles.impointArray = impoint(gca, 0, 0);
+handles.impointArray.setColor('w');
+handles.dividerPoints = 0;
 
 % Validate mode unique!
 handles.validateMode = false;
@@ -617,11 +620,21 @@ function dividebutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 axes(handles.axes2);
-h = impoint();
+handles.impointArray(handles.dividerPoints + 1) = impoint();
+
+addNewPositionCallback(handles.impointArray(handles.dividerPoints + 1), @impointCallback);
+handles.dividerPoints = handles.dividerPoints + 1;
 fprintf('Hi!');
 
     
 guidata(hObject, handles);
+
+
+function impointCallback (coords)
+coords = round(coords);
+
+handles.capArea(coords(2), coords(1))
+
 
 
 % --- Executes on button press in button442.

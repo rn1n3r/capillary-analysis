@@ -637,25 +637,26 @@ function dividebutton_Callback(hObject, eventdata, handles)
 
 axes(handles.axes2);
 handles.impointArray(handles.dividerPoints + 1) = impoint();
-id = handles.dividerPoints + 1;
-pointMoved = @(pos) impointCallback (pos, hObject, handles, id);
-
-addNewPositionCallback(handles.impointArray(handles.dividerPoints + 1), pointMoved);
+%id = handles.dividerPoints + 1;
 
 handles.dividerPositionPos(handles.dividerPoints + 1, :) = getPosition(handles.impointArray(handles.dividerPoints + 1));
 handles.dividerPoints = handles.dividerPoints + 1;
+
+pointMoved = @(pos) impointCallback (pos, hObject, handles, handles.dividerPoints);
+
+addNewPositionCallback(handles.impointArray(handles.dividerPoints), pointMoved);
+
 
 guidata(hObject, handles);
 
 
 function impointCallback (coords, hObject, handles, id)
 id
+handles.dividerPoints
 coords = round(coords);
 handles.capArea(coords(2), coords(1))
 handles.dividerPositionPos(id, :) = coords;
 guidata(hObject, handles);
-
-
 
 
 % --- Executes on button press in button442.

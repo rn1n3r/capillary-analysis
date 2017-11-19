@@ -427,7 +427,6 @@ for i = 1:handles.dividerPoints
         % Set the bottom half to red
         [hy,hx] = find(handles.capArea == capID);
         
-        mid = mean([max(hy) min(hy)]);
         hx = hx(hy > coords(2));
         hy = hy(hy > coords(2));
         

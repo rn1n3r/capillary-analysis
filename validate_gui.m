@@ -417,23 +417,92 @@ end
 
 % Focus mask code
 handles.focusMask = zeros(size(handles.focusMask));
-for i = 1:handles.dividerPoints
+
+allCapIDs = unique(handles.capArea);
+
+for i = 1:length(allCapIDs)
     
-    coords = handles.dividerPositionPos(i, :);
-    if handles.capArea(round(coords(2)), round(coords(1))) ~= 0
-        capID = handles.capArea(round(coords(2)), round(coords(1)));
-        handles.focusMask(handles.capArea == capID) = 1337;
+    
+    if allCapIDs(i) == 0
+    else
+        pointsInCap = [];
+        [hy,hx] = find(handles.capArea == allCapIDs(i));
         
-        % Set the bottom half to red
-        [hy,hx] = find(handles.capArea == capID);
+        for j = 1:size(handles.dividerPositionPos, 1)
+            coords = round(handles.dividerPositionPos(j,:));
+            if handles.capArea(coords(2), coords(1)) == allCapIDs(i)
+                pointsInCap = [pointsInCap; coords(2)];
+            end
+        end
         
-        hx = hx(hy > coords(2));
-        hy = hy(hy > coords(2));
+        if ~isempty(pointsInCap)
+            
         
-        midSubs = sub2ind(size(handles.capArea), hy, hx);
-        handles.focusMask(midSubs) = 9001;
+        
+            focusConst = 9001;
+            pointsInCap = sort(pointsInCap);
+            for j = 1:size(pointsInCap, 1)
+                if j == 1
+                    top = min(hy);
+                    bottom = pointsInCap(j);
+                else
+                    top = pointsInCap(j-1);
+                    bottom = pointsInCap(j);
+                end
+
+                fprintf('lol\n');
+
+                tx = hx(hy >= top & hy < bottom);
+                ty = hy(hy >= top & hy < bottom);
+                midSubs = sub2ind(size(handles.capArea), ty, tx);
+
+                handles.focusMask(midSubs) = focusConst;
+                if focusConst == 9001
+                    focusConst = 1337;
+                else
+                    focusConst = 9001;
+                end
+                
+                if j == size(pointsInCap, 1)
+                    top = bottom;
+                    bottom = max(hy);
+                    tx = hx(hy >= top & hy < bottom);
+                    ty = hy(hy >= top & hy < bottom);
+                    midSubs = sub2ind(size(handles.capArea), ty, tx);
+
+                    handles.focusMask(midSubs) = focusConst;
+                end
+
+            end
+        end
     end
+     
+    
 end
+
+% for i = 1:handles.dividerPoints
+%     
+%     coords = handles.dividerPositionPos(i, :);
+%     if handles.capArea(round(coords(2)), round(coords(1))) ~= 0
+%         
+%         if handles.focusMask(round(coords(2)), round(coords(1)))
+%             fprintf('hrllo!\n');
+%         end
+%         
+%         capID = handles.capArea(round(coords(2)), round(coords(1)));
+%         handles.focusMask(handles.capArea == capID) = 1337;
+%         
+%         % Set the bottom half to red
+%         [hy,hx] = find(handles.capArea == capID);
+%         
+%         hx = hx(hy > coords(2));
+%         hy = hy(hy > coords(2));
+%         
+%         midSubs = sub2ind(size(handles.capArea), hy, hx);
+%         handles.focusMask(midSubs) = 9001;
+%         
+%     end
+% end
 
 % Refresh frame for axes2 if it is in detected capillary mode
 if handles.detectedCapSelected
@@ -574,6 +643,8 @@ end
 
 function image_ButtonDownFcn(hObject, eventdata)
 handles = guidata(hObject);
+
+% Validate mode stuff below -- should remove
 if handles.validateMode
     hAxes  = get(hObject,'Parent');
     coordinates = get(hAxes,'CurrentPoint'); 

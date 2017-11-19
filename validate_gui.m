@@ -423,6 +423,16 @@ for i = 1:handles.dividerPoints
     if handles.capArea(round(coords(2)), round(coords(1))) ~= 0
         capID = handles.capArea(round(coords(2)), round(coords(1)));
         handles.focusMask(handles.capArea == capID) = 1337;
+        
+        % Set the bottom half to red
+        [hy,hx] = find(handles.capArea == capID);
+        
+        mid = mean([max(hy) min(hy)]);
+        hx = hx(hy > coords(2));
+        hy = hy(hy > coords(2));
+        
+        midSubs = sub2ind(size(handles.capArea), hy, hx);
+        handles.focusMask(midSubs) = 9001;
     end
 end
 

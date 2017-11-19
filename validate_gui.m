@@ -415,12 +415,15 @@ if handles.textSelected
     
 end
 
-handles.focusMask = zeros(size(handles.focusMask));
-coords = handles.dividerPositionPos(handles.lastTouched, :);
 % Focus mask code
-if handles.capArea(round(coords(2)), round(coords(1))) ~= 0
-    capID = handles.capArea(round(coords(2)), round(coords(1)));
-    handles.focusMask(handles.capArea == capID) = 1337;
+handles.focusMask = zeros(size(handles.focusMask));
+for i = 1:handles.dividerPoints
+    
+    coords = handles.dividerPositionPos(i, :);
+    if handles.capArea(round(coords(2)), round(coords(1))) ~= 0
+        capID = handles.capArea(round(coords(2)), round(coords(1)));
+        handles.focusMask(handles.capArea == capID) = 1337;
+    end
 end
 
 % Refresh frame for axes2 if it is in detected capillary mode
@@ -683,7 +686,7 @@ id
 coords = round(coords);
 handles.capArea(coords(2), coords(1))
 handles.dividerPositionPos(id, :) = coords;
-
+handles.lastTouched = id;
 guidata(hObject, handles);
 
 

@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 16-Nov-2017 19:29:54
+% Last Modified by GUIDE v2.5 18-Nov-2017 17:52:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -169,7 +169,8 @@ set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
 
 waitbar(0.75,h);
 set(handles.text1, 'String', [handles.fovName ' loaded']);
-
+handles.impointArray = impoint(gca, 0, 0);
+handles.impointArray.setColor('w');
 guidata(hObject, handles);
 close(h);
 
@@ -382,6 +383,10 @@ function axes1_CreateFcn(hObject, eventdata, handles)
 % Hint: place code in OpeningFcn to populate axes1
 
 function handles = refresh (hObject, handles)
+% If the frame has not been loaded yet, do nothing
+if isempty(handles.fnames)
+    return;
+end
 
 
 axes(handles.axes1);
@@ -459,8 +464,6 @@ if handles.dividerPoints > 0
     end
 end
 
-
-
 % --- Executes on button press in labelbutton.
 function labelbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to labelbutton (see GCBO)
@@ -513,6 +516,8 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % Hint: delete(hObject) closes the figure
 %uiresume(handles.figure1)
 delete(hObject);
+
+
 
 
 % --- Executes on button press in pushbutton5.
@@ -642,20 +647,22 @@ handles.impointArray(handles.dividerPoints + 1) = impoint();
 handles.dividerPositionPos(handles.dividerPoints + 1, :) = getPosition(handles.impointArray(handles.dividerPoints + 1));
 handles.dividerPoints = handles.dividerPoints + 1;
 
+% This seems to work as long as the impointCallback is added after
+% dividerPoint is increased?
 pointMoved = @(pos) impointCallback (pos, hObject, handles, handles.dividerPoints);
-
 addNewPositionCallback(handles.impointArray(handles.dividerPoints), pointMoved);
 
-
+handles = refresh(hObject, handles);
 guidata(hObject, handles);
 
 
 function impointCallback (coords, hObject, handles, id)
 id
-handles.dividerPoints
+%handles.dividerPoints
 coords = round(coords);
 handles.capArea(coords(2), coords(1))
 handles.dividerPositionPos(id, :) = coords;
+
 guidata(hObject, handles);
 
 
@@ -695,3 +702,18 @@ end
 handles = refresh(hObject, handles);
 guidata(hObject, handles);
 
+
+% --- Executes on mouse press over figure background, over a disabled or
+% --- inactive control, or over an axes background.
+function figure1_WindowButtonUpFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+fprintf('Hold tight asznee\n');
+%if handles.dividerPoints > 0
+stack = dbstack;
+if ~strcmp(stack(end-3).name, 'dividebutton_Callback')
+    handles = refresh(hObject, handles);
+    guidata(hObject, handles);
+end
+%end

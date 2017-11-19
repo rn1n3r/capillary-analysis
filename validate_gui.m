@@ -81,7 +81,7 @@ handles.focusMask = [];
 handles.focusColor = [];
 handles.focusColorMode = true;
 handles.detectedCapSelected = true;
-
+handles.lastTouched = 0;
 
 % Update handles structure
 guidata(hObject, handles);
@@ -415,6 +415,13 @@ if handles.textSelected
     
 end
 
+handles.focusMask = zeros(size(handles.focusMask));
+coords = handles.dividerPositionPos(handles.lastTouched, :);
+% Focus mask code
+if handles.capArea(round(coords(2)), round(coords(1))) ~= 0
+    capID = handles.capArea(round(coords(2)), round(coords(1)));
+    handles.focusMask(handles.capArea == capID) = 1337;
+end
 
 % Refresh frame for axes2 if it is in detected capillary mode
 if handles.detectedCapSelected
@@ -463,6 +470,8 @@ if handles.dividerPoints > 0
         fprintf('redrawing\n');
     end
 end
+
+
 
 % --- Executes on button press in labelbutton.
 function labelbutton_Callback(hObject, eventdata, handles)
@@ -644,13 +653,25 @@ axes(handles.axes2);
 handles.impointArray(handles.dividerPoints + 1) = impoint();
 %id = handles.dividerPoints + 1;
 
-handles.dividerPositionPos(handles.dividerPoints + 1, :) = getPosition(handles.impointArray(handles.dividerPoints + 1));
+coords = getPosition(handles.impointArray(handles.dividerPoints + 1));
+
+handles.dividerPositionPos(handles.dividerPoints + 1, :) = coords;
 handles.dividerPoints = handles.dividerPoints + 1;
+
+handles.lastTouched = handles.dividerPoints;
 
 % This seems to work as long as the impointCallback is added after
 % dividerPoint is increased?
 pointMoved = @(pos) impointCallback (pos, hObject, handles, handles.dividerPoints);
 addNewPositionCallback(handles.impointArray(handles.dividerPoints), pointMoved);
+
+% Focus mask code
+if handles.capArea(round(coords(2)), round(coords(1))) ~= 0
+    capID = handles.capArea(round(coords(2)), round(coords(1)));
+    handles.focusMask(handles.capArea == capID) = 1337;
+end
+
+
 
 handles = refresh(hObject, handles);
 guidata(hObject, handles);
@@ -709,10 +730,12 @@ function figure1_WindowButtonUpFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-fprintf('Hold tight asznee\n');
+fprintf('Button up\n');
 %if handles.dividerPoints > 0
 stack = dbstack;
 if ~strcmp(stack(end-3).name, 'dividebutton_Callback')
+
+    
     handles = refresh(hObject, handles);
     guidata(hObject, handles);
 end

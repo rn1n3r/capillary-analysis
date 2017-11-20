@@ -428,10 +428,13 @@ for i = 1:length(allCapIDs)
         pointsInCap = [];
         [hy,hx] = find(handles.capArea == allCapIDs(i));
         
-        for j = 1:size(handles.dividerPositionPos, 1)
-            coords = round(handles.dividerPositionPos(j,:));
-            if handles.capArea(coords(2), coords(1)) == allCapIDs(i)
-                pointsInCap = [pointsInCap; coords(2)];
+        if any(handles.dividerPositionPos)
+        
+            for j = 1:size(handles.dividerPositionPos, 1)
+                coords = round(handles.dividerPositionPos(j,:));
+                if handles.capArea(coords(2), coords(1)) == allCapIDs(i)
+                    pointsInCap = [pointsInCap; coords(2)];
+                end
             end
         end
         
@@ -720,6 +723,7 @@ while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.f
     
     % Set the editable text value
     set(handles.edit1, 'String', handles.frameNumber);
+    set(handles.slider1, 'Value', handles.frameNumber);
     guidata(hObject, handles);
     pause(0.025);
     

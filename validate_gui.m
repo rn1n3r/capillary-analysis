@@ -453,7 +453,6 @@ for i = 1:length(allCapIDs)
                     bottom = pointsInCap(j);
                 end
 
-                fprintf('lol\n');
 
                 tx = hx(hy >= top & hy < bottom);
                 ty = hy(hy >= top & hy < bottom);
@@ -469,8 +468,8 @@ for i = 1:length(allCapIDs)
                 if j == size(pointsInCap, 1)
                     top = bottom;
                     bottom = max(hy);
-                    tx = hx(hy >= top & hy < bottom);
-                    ty = hy(hy >= top & hy < bottom);
+                    tx = hx(hy >= top & hy <= bottom);
+                    ty = hy(hy >= top & hy <= bottom);
                     midSubs = sub2ind(size(handles.capArea), ty, tx);
 
                     handles.focusMask(midSubs) = focusConst;
@@ -713,8 +712,10 @@ end
 
 axes(handles.axes1);
 while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.fnames)
+    handles = guidata(hObject);
     showArea = imread(handles.fnames{handles.frameNumber});
     showArea(~handles.area) = 0;
+    %cla reset
     imshow(showArea, 'Parent', handles.axes1, 'DisplayRange', [0 65536]);
     
     if handles.frameNumber ~= length(handles.fnames)
@@ -724,6 +725,7 @@ while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.f
     % Set the editable text value
     set(handles.edit1, 'String', handles.frameNumber);
     set(handles.slider1, 'Value', handles.frameNumber);
+
     guidata(hObject, handles);
     pause(0.025);
     
@@ -738,7 +740,6 @@ function dividebutton_Callback(hObject, eventdata, handles)
 
 axes(handles.axes2);
 handles.impointArray(handles.dividerPoints + 1) = impoint();
-%id = handles.dividerPoints + 1;
 
 coords = getPosition(handles.impointArray(handles.dividerPoints + 1));
 
@@ -818,12 +819,12 @@ function figure1_WindowButtonUpFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 fprintf('Button up\n');
-%if handles.dividerPoints > 0
 stack = dbstack;
-if ~strcmp(stack(end-3).name, 'dividebutton_Callback')
+stacknames = {stack.name};
+if ~any(strcmp(stacknames, 'dividebutton_Callback'))
 
-    
     handles = refresh(hObject, handles);
     guidata(hObject, handles);
 end
-%end
+
+

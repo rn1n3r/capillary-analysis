@@ -82,7 +82,8 @@ handles.focusColor = [];
 handles.focusColorMode = true;
 handles.detectedCapSelected = true;
 handles.lastTouched = 0;
-
+handles.allCapIDs = [];
+handles.capOrientations = [];
 % Update handles structure
 guidata(hObject, handles);
 
@@ -150,7 +151,8 @@ handles.maxImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName
 
 % Store the capillary area mask
 [handles.capArea, handles.idList] = getCapillaries(handles.varianceImage);
-
+handles.allCapIDs = unique(handles.capArea);
+handles.capOrientations = zeros(size(handles.allCapIDs)) - 1;
 handles.focusMask = zeros(size(handles.capArea));
 
 
@@ -418,31 +420,33 @@ end
 % Focus mask code
 handles.focusMask = zeros(size(handles.focusMask));
 
-allCapIDs = unique(handles.capArea);
+handles.allCapIDs = unique(handles.capArea);
 
-for i = 1:length(allCapIDs)
+for i = 1:length(handles.allCapIDs)
     
     
-    if allCapIDs(i) == 0
+    if handles.allCapIDs(i) == 0
     else
         pointsInCap = [];
-        [hy,hx] = find(handles.capArea == allCapIDs(i));
+        [hy,hx] = find(handles.capArea == handles.allCapIDs(i));
         
         if any(handles.dividerPositionPos)
         
             for j = 1:size(handles.dividerPositionPos, 1)
                 coords = round(handles.dividerPositionPos(j,:));
-                if handles.capArea(coords(2), coords(1)) == allCapIDs(i)
+                if handles.capArea(coords(2), coords(1)) == handles.allCapIDs(i)
                     pointsInCap = [pointsInCap; coords(2)];
                 end
             end
         end
         
         if ~isempty(pointsInCap)
-            
         
-        
-            focusConst = 9001;
+            if handles.capOrientations(i) == 1
+                focusConst = 9001;
+            else
+                focusConst = 1337;
+            end
             pointsInCap = sort(pointsInCap);
             for j = 1:size(pointsInCap, 1)
                 if j == 1
@@ -645,8 +649,20 @@ end
 
 function image_ButtonDownFcn(hObject, eventdata)
 handles = guidata(hObject);
+hAxes  = get(hObject,'Parent');
+coordinates = get(hAxes,'CurrentPoint'); 
+coordinates = uint16(coordinates(1,1:2));
 
-% Validate mode stuff below -- should remove
+capID = handles.capArea(coordinates(2), coordinates(1));
+if capID ~= 0
+    
+    handles.capOrientations(handles.allCapIDs == capID) = handles.capOrientations(handles.allCapIDs == capID)*-1;
+    
+end
+
+guidata(hObject, handles);
+refresh(hObject, handles);
+% Validate mode stuff below -- should change
 if handles.validateMode
     hAxes  = get(hObject,'Parent');
     coordinates = get(hAxes,'CurrentPoint'); 

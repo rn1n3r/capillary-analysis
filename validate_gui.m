@@ -418,7 +418,7 @@ if handles.textSelected
 end
 
 % Focus mask code
-handles.focusMask = zeros(size(handles.focusMask));
+%handles.focusMask = zeros(size(handles.focusMask));
 
 handles.allCapIDs = unique(handles.capArea);
 
@@ -653,40 +653,30 @@ hAxes  = get(hObject,'Parent');
 coordinates = get(hAxes,'CurrentPoint'); 
 coordinates = uint16(coordinates(1,1:2));
 
+
 capID = handles.capArea(coordinates(2), coordinates(1));
+
 if capID ~= 0
-    
-    handles.capOrientations(handles.allCapIDs == capID) = handles.capOrientations(handles.allCapIDs == capID)*-1;
-    
+    if handles.validateMode
+        selectedCap = handles.focusMask(handles.capArea == capID);
+        if selectedCap(1) ~= 0
+            handles.focusMask(handles.capArea == capID) = 0;
+        else
+            if eventdata.Button == 1
+                handles.focusMask(handles.capArea == capID) = 1337;
+            else
+                handles.focusMask(handles.capArea == capID) = 9001;
+            end
+        end
+    else
+
+        handles.capOrientations(handles.allCapIDs == capID) = handles.capOrientations(handles.allCapIDs == capID)*-1;
+    end
 end
 
 guidata(hObject, handles);
 refresh(hObject, handles);
-% Validate mode stuff below -- should change
-if handles.validateMode
-    hAxes  = get(hObject,'Parent');
-    coordinates = get(hAxes,'CurrentPoint'); 
-    coordinates = uint16(coordinates(1,1:2));
-    
-    id = handles.capArea(coordinates(2), coordinates(1));
-    if id ~= 0
-        id
-        selectedCap = handles.focusMask(handles.capArea == id);
-        if selectedCap(1) ~= 0
-            handles.focusMask(handles.capArea == id) = 0;
-        else
-            if eventdata.Button == 1
-                handles.focusMask(handles.capArea == id) = 1337;
-            else
-                handles.focusMask(handles.capArea == id) = 9001;
-            end
-        end
-    end
-    
-    guidata(hObject, handles);
-    refresh(hObject, handles);
 
-end
 
 
 % --- Executes on button press in radiobutton12.

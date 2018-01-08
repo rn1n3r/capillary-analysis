@@ -154,7 +154,7 @@ handles.maxImage = imread(strrep([path 'Functional-16bitImages/' handles.fovName
 handles.allCapIDs = unique(handles.capArea);
 handles.capOrientations = zeros(size(handles.allCapIDs)) - 1;
 handles.focusMask = zeros(size(handles.capArea));
-
+handles.valModeFocusMask = handles.focusMask;
 
 % Store location of capillary text labels
 handles.coords = getLabelLocation(handles.capArea, handles.idList);
@@ -420,6 +420,8 @@ end
 % Focus mask code
 %handles.focusMask = zeros(size(handles.focusMask));
 
+% This is needed to consolidate with the "validate mode" button
+handles.focusMask = handles.valModeFocusMask;
 handles.allCapIDs = unique(handles.capArea);
 
 for i = 1:length(handles.allCapIDs)
@@ -660,12 +662,12 @@ if capID ~= 0
     if handles.validateMode
         selectedCap = handles.focusMask(handles.capArea == capID);
         if selectedCap(1) ~= 0
-            handles.focusMask(handles.capArea == capID) = 0;
-        else
+            handles.valModeFocusMask(handles.capArea == capID) = 0;
+        else 
             if eventdata.Button == 1
-                handles.focusMask(handles.capArea == capID) = 1337;
+                handles.valModeFocusMask(handles.capArea == capID) = 1337;
             else
-                handles.focusMask(handles.capArea == capID) = 9001;
+                handles.valModeFocusMask(handles.capArea == capID) = 9001;
             end
         end
     else

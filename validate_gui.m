@@ -22,7 +22,7 @@ function varargout = validate_gui(varargin)
 
 % Edit the above text to modify the response to help validate_gui
 
-% Last Modified by GUIDE v2.5 18-Nov-2017 17:52:08
+% Last Modified by GUIDE v2.5 11-Jan-2018 14:24:48
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -89,7 +89,6 @@ guidata(hObject, handles);
 
 % UIWAIT makes validate_gui wait for user response (see UIRESUME)
 %uiwait(handles.figure1);
-
 
 
 % --- Outputs from this function are returned to the command line.
@@ -269,8 +268,6 @@ end
 guidata(hObject, handles);
 
 
-
-
 % --- Executes during object creation, after setting all properties.
 function slider1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to slider1 (see GCBO)
@@ -375,14 +372,6 @@ guidata(hObject, handles);
 
     
 
-
-% --- Executes during object creation, after setting all properties.
-function axes1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to axes1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: place code in OpeningFcn to populate axes1
 
 function handles = refresh (hObject, handles)
 % If the frame has not been loaded yet, do nothing
@@ -783,24 +772,6 @@ handles.lastTouched = id;
 guidata(hObject, handles);
 
 
-% --- Executes on button press in button442.
-function button442_Callback(hObject, eventdata, handles)
-% hObject    handle to button442 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of button442
-
-
-% --- Executes on button press in button454.
-function button454_Callback(hObject, eventdata, handles)
-% hObject    handle to button454 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of button454
-
-
 % --- Executes when selected object is changed in wavelengthPanel.
 function wavelengthPanel_SelectionChangedFcn(hObject, eventdata, handles)
 % hObject    handle to the selected object in wavelengthPanel 
@@ -834,5 +805,3 @@ if ~any(strcmp(stacknames, 'dividebutton_Callback'))
     handles = refresh(hObject, handles);
     guidata(hObject, handles);
 end
-
-

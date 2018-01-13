@@ -5,14 +5,8 @@ function fovData = analyseFOVFocus (processedPath, fovList, measure)
     tic
     
     % Start parallel processing pool
-    if ispc
-        p = gcp('nocreate');
+    p = gcp('nocreate');
     
-    else
-        if matlabpool('size') == 0
-            matlabpool;
-        end
-    end
     fovListName = fovList;
     
     % Change the names for the FOVs to remove hyphens

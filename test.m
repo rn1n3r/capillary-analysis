@@ -6,10 +6,10 @@
 processedFolder = '../capillary-data/Processed/';
 %fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 fovList = {'X20-FOV3-B'};
-measures = {'BREN'};
-%measures = {'TENG', 'TENV', 'VOLA' };
+%measures = {};
+measures = {'GLVA', 'GLLV' };
 
 for i = 1:numel(measures)
     fovData = analyseFOVFocus('../capillary-data/Processed/', fovList, measures{i});
-    save(['../capillary-data/data/' measures{i} '-01-13'], 'fovData');
+    save(['../capillary-data/data/' measures{i} '-FOV3-01-13'], 'fovData');
 end

@@ -167,11 +167,14 @@ showArea(~handles.capArea) = 0;
 hImage = imshow(showArea, 'Parent', handles.axes2, 'DisplayRange', [0 65536]);
 set(hImage,'ButtonDownFcn',@image_ButtonDownFcn);
 
+% Reset the impoint array
+handles.impointArray = impoint(gca, 0, 0);
+handles.impointArray.setColor('w');
+handles.dividerPoints = 0;
+handles.dividerPositionPos = zeros(1,2);
 
 waitbar(0.75,h);
 set(handles.text1, 'String', [handles.fovName ' loaded']);
-handles.impointArray = impoint(gca, 0, 0);
-handles.impointArray.setColor('w');
 guidata(hObject, handles);
 close(h);
 
@@ -724,7 +727,7 @@ while strcmp(hObject.String, 'Pause') && handles.frameNumber <= length(handles.f
     set(handles.slider1, 'Value', handles.frameNumber);
 
     guidata(hObject, handles);
-    pause(0.025);
+    pause(0.0125);
     
 end
 

@@ -12,5 +12,5 @@ measures = {'TENV'};
 
 for i = 1:numel(measures)
     fovData = analyseFOVFocus(processedFolder, fovList, measures{i});
-    save(['../capillary-data/data/' measures{i} '-all-02-13'], 'fovData');
+    save(['../capillary-data/data/' measures{i} '-all-02-27-middle'], 'fovData');
 end

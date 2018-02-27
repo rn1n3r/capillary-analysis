@@ -43,9 +43,11 @@ function [listROI, circ] = findRBC (frame, area, id, maxImg, isEdge)
     rect = bwlabel(rect);
    
     % Processing
+    minArea = 10;
+    maxXSTD = 2;
     for i = 1:max(rect(:))
-        % Delete regions that are very small (arbitrarily set to 10 px)
-        if sum(sum(rect == i)) < 10
+        % Delete regions that are very small (arbitrarily set by minArea)
+        if sum(sum(rect == i)) < minArea
             rect(rect == i) = 0;
         end
         
@@ -56,7 +58,7 @@ function [listROI, circ] = findRBC (frame, area, id, maxImg, isEdge)
         %If the standard deviation of the x-values is < 2 (again,
         %arbitrarily defined), then treat delete it (to get rid of lines,
         % etc)
-        if std(cellSubs) < 2
+        if std(cellSubs) < maxXSTD
             rect(rect == i) = 0;
         end
     end
@@ -70,13 +72,14 @@ function [listROI, circ] = findRBC (frame, area, id, maxImg, isEdge)
     listROI = zeros(max(rect(:)), 4);
     circ = zeros(max(rect(:)), 1);
     
+    pixelPadding = 4;
     % For each region, call autoGetRect and store the info
     for i = 1:max(rect(:))
         indices = find(rect == i);
         circ(i) = sum(sum(rect == i));
         
         % 4 pixel padding seems to work...
-        listROI(i, :) = autoGetRect(size(rect), size(frame), rectCoords, indices, 4);
+        listROI(i, :) = autoGetRect(size(rect), size(frame), rectCoords, indices, pixelPadding);
 %         newRect = imcrop(originalRect, listROI(i, :));
 %         figure;
 %         imshow(newRect, []); 

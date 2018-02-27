@@ -43,11 +43,11 @@ function fov = getFOVfmeasures(measure, var, fname, maxImg)
             % In the case that there are NO RBCs found in the path
             if ~isempty(fm)
                 for k = 1:numel(fm)
-%                     ycoord = listROI(k, 2) + floor(listROI(k,4)/2);
-%                     if ycoord > 520
-%                         ycoord = 520;
-%                     end
-                    ycoord = listROI(k, 2);
+                    ycoord = listROI(k, 2) + floor(listROI(k,4)/2);
+                    if ycoord > 520
+                        ycoord = 520;
+                    end
+                    %ycoord = listROI(k, 2);
                     listFM(ycoord, j) = fm(k);
                 end
             end

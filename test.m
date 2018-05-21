@@ -8,9 +8,9 @@ processedFolder = '/Volumes/My Passport/backup-0825/Edward/Documents/Files/DUROP
 %fovList = {'X20-FOV3-B', 'X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 fovList = {'X20-FOV3-B','X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 %measures = {};
-measures = {'TENV'};
+measures = {'LAPE', 'LAPM', 'LAPV', 'LAPD'};
 
 for i = 1:numel(measures)
     fovData = analyseFOVFocus(processedFolder, fovList, measures{i});
-    save(['../capillary-data/data/' measures{i} '-all-02-27-middle'], 'fovData');
+    save(['../capillary-data/data/' measures{i} '-all-05-15-middle'], 'fovData');
 end

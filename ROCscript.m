@@ -3,7 +3,8 @@ fovName = 'X20-FOV5-B';
 
 
 if isunix
-    varImg = imread(['/Volumes/DATA-2/Processed/20150619/' fovName '/Functional-16bitImages/' fovName '-16bit442Var.tif']);
+    %varImg = imread(['/Volumes/DATA-2/Processed/20150619/' fovName '/Functional-16bitImages/' fovName '-16bit442Var.tif']);
+    varImg = imread(['../DATA-2/Processed\' fovName '\Functional-16bitImages\' fovName '-16bit442Var.tif']);
     area = getCapillaries(varImg);
     fov = fovData.(strrep(fovName, '-', ''));
     [aroc, TPF, FPF] = generateROC(fov, area, [1100 1100 2100 600 4100 3100], '/Volumes/DATA-2/Processed/20150619/X20-FOV3-B');

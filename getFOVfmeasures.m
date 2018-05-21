@@ -5,17 +5,21 @@ function fov = getFOVfmeasures(measure, var, fname, maxImg)
     % Get the capillary IDs in the FOV
     [area, idList] = getCapillaries(var);
     
+    % Dimensions
+    yFrame = size(var, 1);
+    nFrames = size(fname,1);
+    
     % To store all the capillary focus data
     fov = cell(size(idList, 1), 2);
     fov(:, 1) = num2cell(idList(:, 1));
-    [fov{:, 2}] = deal(zeros(520, 1260));
+    [fov{:, 2}] = deal(zeros(yFrame, nFrames));
    
     % This 520 x 1260 x #capillaries matrix is needed to get around the
     % indexing problems from using parfor
-    tempMatrix = zeros(520, 1260, size(idList, 1));
+    tempMatrix = zeros(yFrame, nFrames, size(idList, 1));
   
-    parfor i = 1:size(fname, 1)
-        listFM = zeros(520, size(idList, 1));
+    parfor i = 1:nFrames
+        listFM = zeros(yFrame, size(idList, 1));
         frame = imread(fname{i});
         % FIRST, REMOVE THE BACKGROUND USING THE MAX IMAGE FROM THE ENTIRE
         % VIDEO
@@ -43,9 +47,12 @@ function fov = getFOVfmeasures(measure, var, fname, maxImg)
             % In the case that there are NO RBCs found in the path
             if ~isempty(fm)
                 for k = 1:numel(fm)
+                    
+                    % Assign the focus value to the middle point of the RBC
+                    % bounding box
                     ycoord = listROI(k, 2) + floor(listROI(k,4)/2);
-                    if ycoord > 520
-                        ycoord = 520;
+                    if ycoord > yFrame
+                        ycoord = yFrame;
                     end
                     %ycoord = listROI(k, 2);
                     listFM(ycoord, j) = fm(k);

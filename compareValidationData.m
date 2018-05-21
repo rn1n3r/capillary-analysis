@@ -1,3 +1,5 @@
+
+
 clean
 fovList = {'X20-FOV3-B','X20-FOV5-B', 'X20-FOV7-B', 'X20-FOV8-B', 'X20-FOVp2-2-B', 'X20-FOVp2-4-P'};
 %fovList = {'X20-FOVp2-2-B'};
@@ -55,4 +57,5 @@ for k = 1:length(fmeasureFile)
     optimal_threshold./max(meanValues(:))
     
 %save(['/Users/edward/Documents/capillary-data/data/' savefile{k} '.mat'], 'FPF', 'TPF', 'aroc')
+
 end
